@@ -1,107 +1,52 @@
-function escapeHtml(value = "") {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;");
-}
-
-function getChatIds() {
-  const raw = process.env.TELEGRAM_CHAT_IDS || process.env.TELEGRAM_CHAT_ID || "";
-
-  return raw
-    .split(",")
-    .map((id) => id.trim())
-    .filter(Boolean);
-}
-
-async function sendTelegramMessage({ token, chatId, message }) {
-  const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      chat_id: chatId,
-      text: message,
-      parse_mode: "HTML",
-      disable_web_page_preview: true,
-    }),
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Telegram failed for chat ${chatId}: ${errorText}`);
-  }
-
-  return response.json();
-}
-
 export default async function handler(req, res) {
-  if (req.method === "OPTIONS") {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-    return res.status(200).end();
-  }
-
-  if (req.method !== "POST") {
-    return res.status(405).json({ ok: false, error: "Method not allowed" });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ ok: false, error: 'Method not allowed' });
   }
 
   const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatIds = getChatIds();
+  const chatIdsRaw = process.env.TELEGRAM_CHAT_IDS || process.env.TELEGRAM_CHAT_ID;
 
-  if (!token || chatIds.length === 0) {
-    return res.status(500).json({ ok: false, error: "Telegram env variables are not configured" });
+  if (!token || !chatIdsRaw) {
+    return res.status(500).json({ ok: false, error: 'Telegram env variables are not configured' });
   }
 
-  let body = req.body;
+  const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : req.body || {};
+  const project = String(body.project || '').trim();
+  const email = String(body.email || '').trim();
+  const description = String(body.description || '').trim();
+  const contacts = String(body.contacts || '').trim();
 
-  if (typeof body === "string") {
-    body = JSON.parse(body);
+  if (!project || !email || !description) {
+    return res.status(400).json({ ok: false, error: 'Required fields are missing' });
   }
 
-  const projectName = escapeHtml(body.projectName);
-  const description = escapeHtml(body.description);
-  const email = escapeHtml(body.email);
-  const contact = escapeHtml(body.contact);
-  const page = escapeHtml(body.page);
+  const text = [
+    'Новая заявка с сайта Missing Frame',
+    '',
+    `Проект: ${project}`,
+    `Email: ${email}`,
+    contacts ? `Контакты: ${contacts}` : null,
+    '',
+    `Описание:\n${description}`,
+  ].filter(Boolean).join('\n');
 
-  if (!projectName || !description || !email) {
-    return res.status(400).json({ ok: false, error: "Required fields are missing" });
+  const chatIds = chatIdsRaw.split(',').map(id => id.trim()).filter(Boolean);
+
+  try {
+    const results = await Promise.all(chatIds.map(chat_id => fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id, text, disable_web_page_preview: true }),
+    })));
+
+    const failed = results.find(response => !response.ok);
+    if (failed) {
+      const errorText = await failed.text();
+      return res.status(502).json({ ok: false, error: errorText });
+    }
+
+    return res.status(200).json({ ok: true });
+  } catch (error) {
+    return res.status(500).json({ ok: false, error: error.message });
   }
-
-  const message = [
-    "<b>Новая заявка с сайта Missing Frame</b>",
-    "",
-    `<b>Проект:</b> ${projectName}`,
-    `<b>Описание:</b> ${description}`,
-    `<b>Email:</b> ${email}`,
-    `<b>Контакт:</b> ${contact || "не указан"}`,
-    "",
-    `<b>Страница:</b> ${page}`,
-  ].join("\n");
-
-  const results = await Promise.allSettled(
-    chatIds.map((chatId) => sendTelegramMessage({ token, chatId, message }))
-  );
-
-  const failed = results
-    .map((result, index) => ({ result, chatId: chatIds[index] }))
-    .filter((item) => item.result.status === "rejected");
-
-  if (failed.length === chatIds.length) {
-    return res.status(500).json({
-      ok: false,
-      error: "Telegram request failed for all chat IDs",
-      failedChatIds: failed.map((item) => item.chatId),
-    });
-  }
-
-  return res.status(200).json({
-    ok: true,
-    sentTo: chatIds.length - failed.length,
-    failedChatIds: failed.map((item) => item.chatId),
-  });
 }
