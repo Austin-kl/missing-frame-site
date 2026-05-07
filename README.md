@@ -1,6 +1,6 @@
-# Missing Frame Site
+# Missing Frame site
 
-## Быстрый запуск
+## Запуск локально
 
 ```bash
 npm install
@@ -14,12 +14,10 @@ npm run build
 npm run preview
 ```
 
-## Переменные окружения
-
-Создай `.env.local`:
+## Vercel env
 
 ```env
-TELEGRAM_BOT_TOKEN=your_bot_token_here
+TELEGRAM_BOT_TOKEN=your_bot_token
 TELEGRAM_CHAT_IDS=123456789,-1009876543210
 VITE_FORM_ENDPOINT=/api/contact
 ```
@@ -35,28 +33,13 @@ public/assets/team/commercial.png
 public/assets/team/creative.png
 ```
 
-Главный фон:
-
-```txt
-public/assets/hero/mf-backstage-loop.webm
-public/assets/hero/mf-backstage-loop.mp4
-public/assets/hero/mf-backstage-poster.webp
-```
-
 Кейсы:
 
 ```txt
-public/assets/cases/<case-folder>/cover.webp
-public/assets/cases/<case-folder>/cover-loop.webp
-public/assets/cases/<case-folder>/<video>.mp4
-public/assets/cases/<case-folder>/gallery/01.webp
-public/assets/cases/<case-folder>/gallery/02.webp
+public/assets/cases/glowbyte/cover.webp
+public/assets/cases/glowbyte/cover-loop.webp
+public/assets/cases/glowbyte/aftermovie.mp4
+public/assets/cases/glowbyte/gallery/01.webp
 ```
 
-## Что исправлено в мобильной версии
-
-- Мобильное меню теперь fullscreen, по центру экрана, с сильным blur-фоном.
-- Карусель кейсов на мобиле показывает одну карточку без наложений.
-- Текст кейсов на мобиле вынесен под изображение.
-- Убраны декоративные линии, которые могли создавать визуальный мусор.
-- Исправлена фраза в контактах: «за 15–20 минут».
+Для мобильной версии карусель показывает одну карточку без наложения текста поверх изображения. На десктопе включается наложенная карусель с blur/opacity.

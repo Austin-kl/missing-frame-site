@@ -8,7 +8,6 @@ function escapeHtml(value = "") {
 
 function getChatIds() {
   const raw = process.env.TELEGRAM_CHAT_IDS || process.env.TELEGRAM_CHAT_ID || "";
-
   return raw
     .split(",")
     .map((id) => id.trim())
@@ -46,10 +45,7 @@ export default async function handler(req, res) {
   }
 
   if (req.method !== "POST") {
-    return res.status(405).json({
-      ok: false,
-      error: "Method not allowed",
-    });
+    return res.status(405).json({ ok: false, error: "Method not allowed" });
   }
 
   const token = process.env.TELEGRAM_BOT_TOKEN;
@@ -63,11 +59,10 @@ export default async function handler(req, res) {
   }
 
   let body = req.body;
-
   if (typeof body === "string") {
     try {
       body = JSON.parse(body);
-    } catch (error) {
+    } catch {
       return res.status(400).json({ ok: false, error: "Invalid JSON" });
     }
   }
@@ -79,10 +74,7 @@ export default async function handler(req, res) {
   const page = escapeHtml(body?.page);
 
   if (!projectName || !description || !email) {
-    return res.status(400).json({
-      ok: false,
-      error: "Required fields are missing",
-    });
+    return res.status(400).json({ ok: false, error: "Required fields are missing" });
   }
 
   const message = [
@@ -97,13 +89,7 @@ export default async function handler(req, res) {
   ].join("\n");
 
   const results = await Promise.allSettled(
-    chatIds.map((chatId) =>
-      sendTelegramMessage({
-        token,
-        chatId,
-        message,
-      })
-    )
+    chatIds.map((chatId) => sendTelegramMessage({ token, chatId, message }))
   );
 
   const failed = results

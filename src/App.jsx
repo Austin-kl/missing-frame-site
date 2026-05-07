@@ -1,6 +1,23 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
+const ROUTES = {
+  home: "/",
+  services: "/services",
+  cases: "/cases",
+  team: "/team",
+  process: "/process",
+  contact: "/contact",
+};
+
+const ASSETS = {
+  heroVideoWebm: "/assets/hero/mf-backstage-loop.webm",
+  heroVideoMp4: "/assets/hero/mf-backstage-loop.mp4",
+  heroPoster: "/assets/hero/mf-backstage-poster.webp",
+};
+
+const FORM_ENDPOINT = import.meta.env.VITE_FORM_ENDPOINT || "/api/contact";
+
 function IconBase({ className = "h-4 w-4", children }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -62,6 +79,16 @@ function Clapperboard(props) {
   );
 }
 
+function Download(props) {
+  return (
+    <IconBase {...props}>
+      <path d="M12 3v12" />
+      <path d="m7 10 5 5 5-5" />
+      <path d="M5 21h14" />
+    </IconBase>
+  );
+}
+
 function Film(props) {
   return (
     <IconBase {...props}>
@@ -85,20 +112,20 @@ function Mail(props) {
   );
 }
 
+function Phone(props) {
+  return (
+    <IconBase {...props}>
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.86 19.86 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.86 19.86 0 0 1 2.08 4.18 2 2 0 0 1 4.06 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.63 2.62a2 2 0 0 1-.45 2.11L8 9.91a16 16 0 0 0 6.09 6.09l1.46-1.24a2 2 0 0 1 2.11-.45c.84.3 1.72.51 2.62.63A2 2 0 0 1 22 16.92z" />
+    </IconBase>
+  );
+}
+
 function Menu(props) {
   return (
     <IconBase {...props}>
       <path d="M4 6h16" />
       <path d="M4 12h16" />
       <path d="M4 18h16" />
-    </IconBase>
-  );
-}
-
-function Phone(props) {
-  return (
-    <IconBase {...props}>
-      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.86 19.86 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.86 19.86 0 0 1 2.08 4.18 2 2 0 0 1 4.06 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.63 2.62a2 2 0 0 1-.45 2.11L8 9.91a16 16 0 0 0 6.09 6.09l1.46-1.24a2 2 0 0 1 2.11-.45c.84.3 1.72.51 2.62.63A2 2 0 0 1 22 16.92z" />
     </IconBase>
   );
 }
@@ -162,14 +189,6 @@ function TelegramIcon({ className = "h-4 w-4" }) {
     </svg>
   );
 }
-
-const ASSETS = {
-  heroVideoWebm: "/assets/hero/mf-backstage-loop.webm",
-  heroVideoMp4: "/assets/hero/mf-backstage-loop.mp4",
-  heroPoster: "/assets/hero/mf-backstage-poster.webp",
-};
-
-const FORM_ENDPOINT = import.meta.env.VITE_FORM_ENDPOINT || "/api/contact";
 
 const CASES = [
   {
@@ -370,27 +389,19 @@ const SERVICES = [
   {
     icon: Play,
     title: "Вертикальный контент",
-    text: "Короткие вертикальные видео, экспертные нарезки, итоги дня, стенд за 30 секунд, 3 тезиса со сессии, закулисье и быстрый итоговый ролик.",
+    text: "Короткие вертикальные видео, экспертные нарезки, итоги дня, стенд за 30 секунд, 3 тезиса со сессии и закулисье.",
     tags: ["рилсы", "shorts", "recap"],
   },
   {
     icon: ShieldCheck,
     title: "Производственная система",
-    text: "Бриф, роли, список кадров, маршруты съёмки, дедлайны, выдача материалов, архив, аналитический разбор и повторное использование контента.",
+    text: "Бриф, роли, список кадров, маршруты съёмки, дедлайны, выдача материалов, архив и аналитический разбор.",
     tags: ["бриф", "CRM", "выдача", "разбор"],
   },
 ];
 
 const FILTERS = ["Все", "События и бизнес", "Бренды и партнёры", "Клипы и креатив", "Шоу и медиаформаты", "Процесс и система"];
-
-const ROUTES = {
-  home: "/",
-  cases: "/cases",
-  services: "/services",
-  team: "/team",
-  process: "/process",
-  contact: "/contact",
-};
+const PARTNERS = ["Glowbyte", "Медиавыпускной", "SVVFIT", "Спортивные события"];
 
 const SERVICE_PACKS = [
   ["Пакет для партнёра", "Стенд, представители, активность, интервью, короткие видео и материалы для отчёта."],
@@ -414,9 +425,18 @@ const PROCESS_STEPS = [
   ["Аналитика", "Разбор результата, ошибки, повторное использование контента, улучшение системы."],
 ];
 
-const PROCESS_TOOLS = ["Паспорт проекта", "Список кадров", "Смета", "Календарь", "Материалы на выдачу", "Риски", "Согласования", "Статусы", "Дедлайны", "Цикл улучшений"];
-
-const PARTNERS = ["Glowbyte", "Медиавыпускной", "SVVFIT", "Media BMSTU", "Спортивные события"];
+const PROCESS_TOOLS = [
+  "Паспорт проекта",
+  "Список кадров",
+  "Смета",
+  "Календарь",
+  "Материалы на выдачу",
+  "Риски",
+  "Согласования",
+  "Статусы",
+  "Дедлайны",
+  "Цикл улучшений",
+];
 
 const TEAM_MEMBERS = [
   {
@@ -494,7 +514,8 @@ function Noise() {
       <div
         className="h-full w-full"
         style={{
-          backgroundImage: "url('data:image/svg+xml,%3Csvg viewBox=%220 0 240 240%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E')",
+          backgroundImage:
+            "url('data:image/svg+xml,%3Csvg viewBox=%220 0 240 240%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E')",
         }}
       />
     </div>
@@ -503,7 +524,7 @@ function Noise() {
 
 function PageShell({ children }) {
   return (
-    <div className="min-h-screen bg-[#0A0A0B] text-[#E8E1D8] selection:bg-[#8F1F23] selection:text-[#E8E1D8]">
+    <div className="min-h-screen overflow-x-hidden bg-[#0A0A0B] text-[#E8E1D8] selection:bg-[#8F1F23] selection:text-[#E8E1D8]">
       <div className="fixed inset-0 -z-10 overflow-hidden bg-[#0A0A0B]">
         <div className="absolute -left-48 top-0 h-[520px] w-[520px] rounded-full bg-[#340F12] opacity-70 blur-[140px]" />
         <div className="absolute right-[-180px] top-[20%] h-[420px] w-[420px] rounded-full bg-[#8F1F23] opacity-25 blur-[160px]" />
@@ -511,6 +532,20 @@ function PageShell({ children }) {
       </div>
       <Noise />
       {children}
+    </div>
+  );
+}
+
+function Eyebrow({ children }) {
+  return <div className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#8F1F23]">{children}</div>;
+}
+
+function SectionTitle({ eyebrow, title, text, compact = false }) {
+  return (
+    <div className={cls("mx-auto max-w-3xl", compact ? "mb-8" : "mb-12")}>
+      {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : null}
+      <h2 className="text-3xl font-semibold tracking-[-0.04em] md:text-5xl">{title}</h2>
+      {text ? <p className="mt-5 text-base leading-7 text-[#E8E1D8]/65 md:text-lg">{text}</p> : null}
     </div>
   );
 }
@@ -562,35 +597,52 @@ function Nav({ route, navigate }) {
           </button>
         </div>
 
-        <button type="button" onClick={() => setOpen(true)} className="rounded-full border border-[#E8E1D8]/15 p-2 lg:hidden" aria-label="Открыть меню">
+        <button type="button" onClick={() => setOpen(true)} className="rounded-full border border-[#E8E1D8]/15 p-3 lg:hidden" aria-label="Открыть меню">
           <Menu className="h-5 w-5" />
         </button>
       </div>
 
       <AnimatePresence>
         {open && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 bg-[#0A0A0B]/95 p-4 backdrop-blur-xl lg:hidden">
-            <div className="flex items-center justify-between">
-              <div className="text-sm uppercase tracking-[0.25em]">Missing Frame</div>
-              <button type="button" onClick={() => setOpen(false)} className="rounded-full border border-[#E8E1D8]/15 p-2" aria-label="Закрыть меню">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 lg:hidden">
+            <button type="button" aria-label="Закрыть меню" onClick={() => setOpen(false)} className="absolute inset-0 h-full w-full bg-[#0A0A0B]/90 backdrop-blur-2xl" />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.98, y: 10 }}
+              transition={{ duration: 0.22 }}
+              className="relative flex min-h-dvh flex-col items-center justify-center px-6 text-center"
+            >
+              <button type="button" onClick={() => setOpen(false)} className="absolute right-4 top-4 rounded-full border border-[#E8E1D8]/15 p-3" aria-label="Закрыть меню">
                 <X className="h-5 w-5" />
               </button>
-            </div>
-            <div className="mt-12 grid gap-3">
-              {links.map(([href, label]) => (
-                <button
-                  type="button"
-                  key={href}
-                  onClick={() => {
-                    navigate(href);
-                    setOpen(false);
-                  }}
-                  className="border-b border-[#E8E1D8]/10 py-4 text-left text-2xl"
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
+              <div className="mb-10 text-sm uppercase tracking-[0.28em] text-[#E8E1D8]/65">Missing Frame</div>
+              <div className="flex w-full max-w-sm flex-col gap-4">
+                {links.map(([href, label]) => (
+                  <button
+                    type="button"
+                    key={href}
+                    onClick={() => {
+                      navigate(href);
+                      setOpen(false);
+                    }}
+                    className="rounded-2xl border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] px-6 py-4 text-center text-2xl font-medium text-[#E8E1D8] transition hover:border-[#E8E1D8]/25"
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  navigate(ROUTES.contact);
+                  setOpen(false);
+                }}
+                className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#8F1F23] px-6 py-3 text-base font-semibold text-[#E8E1D8]"
+              >
+                Создать проект <ArrowRight className="h-4 w-4" />
+              </button>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -598,25 +650,10 @@ function Nav({ route, navigate }) {
   );
 }
 
-function Eyebrow({ children }) {
-  return <div className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#8F1F23]">{children}</div>;
-}
-
-function SectionTitle({ eyebrow, title, text, compact = false }) {
-  return (
-    <div className={cls("mx-auto max-w-3xl", compact ? "mb-8" : "mb-12")}>
-      {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : null}
-      <h2 className="text-3xl font-semibold tracking-[-0.04em] md:text-5xl">{title}</h2>
-      {text ? <p className="mt-5 text-base leading-7 text-[#E8E1D8]/65 md:text-lg">{text}</p> : null}
-    </div>
-  );
-}
-
 function FallbackVisual({ label }) {
   return (
     <div className="absolute inset-0">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(143,31,35,0.45),transparent_32%),linear-gradient(135deg,rgba(232,225,216,0.12),rgba(52,15,18,0.42)_48%,rgba(10,10,11,1))]" />
-      <div className="absolute inset-x-6 top-6 h-px bg-[#E8E1D8]/20" />
       <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between gap-4">
         <div>
           <div className="mb-2 h-2 w-2 rounded-full bg-[#8F1F23]" />
@@ -630,6 +667,7 @@ function FallbackVisual({ label }) {
 
 function MediaPlaceholder({ label = "медиа", className = "", src, alt = "" }) {
   const [failed, setFailed] = useState(false);
+
   return (
     <div className={cls("relative overflow-hidden border border-[#E8E1D8]/10 bg-[#111]", className)}>
       {src && !failed ? <img src={src} alt={alt || label} onError={() => setFailed(true)} className="h-full w-full object-cover opacity-80" /> : <FallbackVisual label={label} />}
@@ -637,8 +675,41 @@ function MediaPlaceholder({ label = "медиа", className = "", src, alt = "" 
   );
 }
 
+function HeroVideo() {
+  const [failed, setFailed] = useState(false);
+
+  return (
+    <div className="relative aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-[#0A0A0B]">
+      {!failed ? (
+        <video className="h-full w-full object-cover opacity-75" poster={ASSETS.heroPoster} autoPlay muted loop playsInline onError={() => setFailed(true)}>
+          <source src={ASSETS.heroVideoWebm} type="video/webm" />
+          <source src={ASSETS.heroVideoMp4} type="video/mp4" />
+        </video>
+      ) : (
+        <FallbackVisual label="закулисный фон" />
+      )}
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,11,0.05),rgba(10,10,11,0.82)),radial-gradient(circle_at_22%_16%,rgba(143,31,35,0.45),transparent_30%)]" />
+      <div className="absolute left-5 right-5 top-5 hidden items-center justify-between text-xs uppercase tracking-[0.2em] text-[#E8E1D8]/55 sm:flex">
+        <span>закулисный фон</span>
+        <span>цикличное видео</span>
+      </div>
+      <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-[#E8E1D8]/12 bg-[#0A0A0B]/55 p-4 backdrop-blur-md sm:p-5">
+        <div className="mb-3 flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#8F1F23]">
+          <Sparkles className="h-4 w-4" /> ключевые факты
+        </div>
+        <div className="grid grid-cols-3 gap-2 text-center sm:gap-3">
+          <Metric value="40+" label="событий" />
+          <Metric value="700" label="участников" />
+          <Metric value="6+2" label="медиа-команда" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function TeamPhoto({ src, alt, index }) {
   const [failed, setFailed] = useState(false);
+
   return (
     <div className="relative mb-6 flex aspect-[4/5] items-end justify-center overflow-hidden rounded-[1.5rem] border border-[#E8E1D8]/10 bg-[radial-gradient(circle_at_50%_20%,rgba(143,31,35,0.35),transparent_42%),linear-gradient(180deg,rgba(232,225,216,0.06),rgba(10,10,11,0.92))]">
       {src && !failed ? (
@@ -655,33 +726,11 @@ function TeamPhoto({ src, alt, index }) {
   );
 }
 
-function HeroVideo() {
-  const [failed, setFailed] = useState(false);
+function Metric({ value, label }) {
   return (
-    <div className="relative aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-[#0A0A0B]">
-      {!failed ? (
-        <video className="h-full w-full object-cover opacity-75" poster={ASSETS.heroPoster} autoPlay muted loop playsInline onError={() => setFailed(true)}>
-          <source src={ASSETS.heroVideoWebm} type="video/webm" />
-          <source src={ASSETS.heroVideoMp4} type="video/mp4" />
-        </video>
-      ) : (
-        <FallbackVisual label="закулисный фон" />
-      )}
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,11,0.05),rgba(10,10,11,0.82)),radial-gradient(circle_at_22%_16%,rgba(143,31,35,0.45),transparent_30%)]" />
-      <div className="absolute left-5 right-5 top-5 flex items-center justify-between text-xs uppercase tracking-[0.2em] text-[#E8E1D8]/55">
-        <span>закулисный фон</span>
-        <span>цикличное видео</span>
-      </div>
-      <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-[#E8E1D8]/12 bg-[#0A0A0B]/55 p-5 backdrop-blur-md">
-        <div className="mb-3 flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#8F1F23]">
-          <Sparkles className="h-4 w-4" /> ключевые факты
-        </div>
-        <div className="grid grid-cols-3 gap-3 text-center">
-          <Metric value="40+" label="событий" />
-          <Metric value="700" label="участников" />
-          <Metric value="6+2" label="медиа-команда" />
-        </div>
-      </div>
+    <div className="rounded-2xl border border-[#E8E1D8]/10 bg-[#E8E1D8]/5 p-2 sm:p-3">
+      <div className="text-xl font-semibold tracking-[-0.05em] sm:text-2xl">{value}</div>
+      <div className="mt-1 break-words text-[9px] uppercase tracking-[0.12em] text-[#E8E1D8]/45 sm:text-[10px] sm:tracking-[0.18em]">{label}</div>
     </div>
   );
 }
@@ -708,20 +757,28 @@ function Hero({ navigate }) {
   );
 }
 
-function Metric({ value, label }) {
+function PartnersStrip() {
   return (
-    <div className="rounded-2xl border border-[#E8E1D8]/10 bg-[#E8E1D8]/5 p-3">
-      <div className="text-2xl font-semibold tracking-[-0.05em]">{value}</div>
-      <div className="mt-1 text-[10px] uppercase tracking-[0.18em] text-[#E8E1D8]/45">{label}</div>
-    </div>
+    <section className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-10">
+      <div className="rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-5 md:p-6">
+        <Eyebrow>партнёры и проекты</Eyebrow>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {PARTNERS.map((partner) => (
+            <div key={partner} className="flex min-h-20 items-center justify-center rounded-2xl border border-[#E8E1D8]/10 bg-[#0A0A0B]/35 px-4 text-center text-sm font-semibold text-[#E8E1D8]/70">
+              {partner}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
 function CasesCarousel({ navigate, items = CASES, title = "Кейсы", text = "Выберите проект и откройте подробности." }) {
   const [index, setIndex] = useState(0);
   const safeItems = items.length ? items : CASES;
-  const active = safeItems[index % safeItems.length];
   const total = safeItems.length;
+  const active = safeItems[index % total];
 
   useEffect(() => {
     setIndex(0);
@@ -743,7 +800,9 @@ function CasesCarousel({ navigate, items = CASES, title = "Кейсы", text = "
         <div>
           <Eyebrow>кейсы</Eyebrow>
           <div className="mb-3 flex items-center gap-3 text-sm text-[#E8E1D8]/50">
-            <span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1">{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span>
+            <span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1">
+              {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+            </span>
             <span>{active.shortTitle}</span>
           </div>
           <h2 className="text-3xl font-semibold tracking-[-0.045em] md:text-5xl">{title}</h2>
@@ -754,9 +813,25 @@ function CasesCarousel({ navigate, items = CASES, title = "Кейсы", text = "
         </button>
       </div>
 
-      <div className="relative mx-auto h-[480px] max-w-6xl md:h-[540px]">
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-28 bg-gradient-to-r from-[#0A0A0B] to-transparent md:w-44" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-28 bg-gradient-to-l from-[#0A0A0B] to-transparent md:w-44" />
+      <div className="md:hidden">
+        <div className="overflow-hidden rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-3">
+          <MediaPlaceholder src={active.loop || active.cover} alt={active.title} label={`${active.shortTitle}: обложка`} className="aspect-[4/5] rounded-[1.6rem]" />
+          <div className="p-4">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1 text-xs text-[#E8E1D8]/60">
+                {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+              </span>
+              <span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1 text-[10px] uppercase tracking-[0.15em] text-[#E8E1D8]/55">{active.type}</span>
+            </div>
+            <h3 className="text-4xl font-semibold leading-[0.95] tracking-[-0.04em]">{active.title}</h3>
+            <p className="mt-4 text-sm leading-7 text-[#E8E1D8]/62">{active.lead}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="relative mx-auto hidden h-[540px] max-w-6xl md:block">
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-44 bg-gradient-to-r from-[#0A0A0B] to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-44 bg-gradient-to-l from-[#0A0A0B] to-transparent" />
         {safeItems.map((item, itemIndex) => {
           const offset = getOffset(itemIndex);
           const absOffset = Math.abs(offset);
@@ -766,6 +841,7 @@ function CasesCarousel({ navigate, items = CASES, title = "Кейсы", text = "
           const opacity = isActive ? 1 : absOffset === 1 ? 0.5 : absOffset === 2 ? 0.2 : 0;
           const blur = isActive ? "blur(0px)" : absOffset === 1 ? "blur(2px)" : "blur(7px)";
           const zIndex = 20 - absOffset;
+
           return (
             <motion.div
               key={item.id}
@@ -806,6 +882,7 @@ function CasesCarousel({ navigate, items = CASES, title = "Кейсы", text = "
 
 function ServicesTeaser({ navigate }) {
   const previewServices = SERVICES.slice(0, 4);
+
   return (
     <section className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
       <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
@@ -831,23 +908,6 @@ function ServicesTeaser({ navigate }) {
             </div>
           );
         })}
-      </div>
-    </section>
-  );
-}
-
-function PartnersStrip() {
-  return (
-    <section className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-10">
-      <div className="rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-5 md:p-6">
-        <Eyebrow>партнёры и проекты</Eyebrow>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-          {PARTNERS.map((partner) => (
-            <div key={partner} className="flex min-h-20 items-center justify-center rounded-2xl border border-[#E8E1D8]/10 bg-[#0A0A0B]/35 px-4 text-center text-sm font-semibold text-[#E8E1D8]/70">
-              {partner}
-            </div>
-          ))}
-        </div>
       </div>
     </section>
   );
@@ -940,6 +1000,7 @@ function DeliveryBlock() {
 function CasesPage({ navigate }) {
   const [filter, setFilter] = useState("Все");
   const visibleCases = useMemo(() => CASES.filter((item) => filter === "Все" || item.category === filter), [filter]);
+
   return (
     <main className="mx-auto max-w-7xl px-4 py-14 md:px-6 md:py-20">
       <SectionTitle eyebrow="портфолио" title="Кейсы Missing Frame" text="События, бренды, клипы, шоу и система работы." />
@@ -985,6 +1046,7 @@ function CaseCard({ item, navigate }) {
 
 function VideoBlock({ item }) {
   const [failed, setFailed] = useState(false);
+
   return (
     <div className="overflow-hidden rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-3">
       <div className="relative aspect-video overflow-hidden rounded-[1.45rem] bg-[#0A0A0B]">
@@ -1003,6 +1065,7 @@ function VideoBlock({ item }) {
 
 function CaseDetailPage({ item, navigate }) {
   if (!item) return <NotFound navigate={navigate} />;
+
   return (
     <main>
       <section className="mx-auto max-w-7xl px-4 py-10 md:px-6 md:py-16">
@@ -1062,6 +1125,7 @@ function CaseDetailPage({ item, navigate }) {
           </div>
         </div>
       </section>
+
       <ProjectStartBlock navigate={navigate} />
     </main>
   );
@@ -1090,6 +1154,7 @@ function TeamContactRow({ email, phone, telegram }) {
   const linkClass = "grid h-12 w-full min-w-0 grid-cols-[18px_58px_minmax(0,1fr)] items-center gap-2 overflow-hidden rounded-2xl border border-[#E8E1D8]/10 bg-[#0A0A0B]/35 px-3 text-sm text-[#E8E1D8]/72 transition hover:border-[#E8E1D8]/25 hover:text-[#E8E1D8]";
   const labelClass = "min-w-0 text-[10px] uppercase tracking-[0.08em] text-[#E8E1D8]/38";
   const valueClass = "block min-w-0 truncate text-left text-xs text-[#E8E1D8]/72";
+
   return (
     <div className="mt-auto grid gap-3 pt-5">
       <a href={`mailto:${email}`} title={email} aria-label={`Написать на почту ${email}`} className={linkClass}>
@@ -1151,7 +1216,9 @@ function ProcessPage() {
         <h2 className="text-3xl font-semibold tracking-[-0.04em]">Документы и операционные инструменты</h2>
         <div className="mt-6 grid gap-3 md:grid-cols-3">
           {PROCESS_TOOLS.map((item) => (
-            <div key={item} className="rounded-2xl border border-[#E8E1D8]/[0.08] bg-[#0A0A0B]/35 p-4 text-sm text-[#E8E1D8]/65">{item}</div>
+            <div key={item} className="rounded-2xl border border-[#E8E1D8]/[0.08] bg-[#0A0A0B]/35 p-4 text-sm text-[#E8E1D8]/65">
+              {item}
+            </div>
           ))}
         </div>
       </div>
@@ -1169,6 +1236,7 @@ function ContactPage() {
     setSent(false);
     setError("");
     setSending(true);
+
     const form = event.currentTarget;
     const formData = new FormData(form);
     const payload = {
@@ -1179,6 +1247,7 @@ function ContactPage() {
       page: typeof window !== "undefined" ? window.location.href : "",
       source: "missing-frame-site",
     };
+
     try {
       const response = await fetch(FORM_ENDPOINT, {
         method: "POST",
@@ -1200,7 +1269,7 @@ function ContactPage() {
       <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
         <div>
           <Eyebrow>контакты</Eyebrow>
-          <h1 className="text-4xl font-semibold tracking-[-0.055em] md:text-7xl">Запустить проект или обсудить пакет на 15–20 минут.</h1>
+          <h1 className="text-4xl font-semibold tracking-[-0.055em] md:text-7xl">Запустить проект или обсудить пакет за 15–20 минут.</h1>
           <p className="mt-6 text-lg leading-8 text-[#E8E1D8]/66">Основной контакт: Екатерина / Missing Frame production.</p>
           <div className="mt-8 grid gap-3">
             <a href="mailto:partner@missingframe.ru" className="inline-flex w-fit items-center gap-2 rounded-full border border-[#E8E1D8]/15 px-5 py-3 text-[#E8E1D8]/75 hover:border-[#E8E1D8]/35">
@@ -1291,9 +1360,7 @@ function NotFound({ navigate }) {
     <main className="mx-auto max-w-3xl px-4 py-24 text-center md:px-6">
       <Eyebrow>404</Eyebrow>
       <h1 className="text-5xl font-semibold tracking-[-0.05em]">Страница не найдена</h1>
-      <button type="button" onClick={() => navigate(ROUTES.home)} className="mt-8 rounded-full bg-[#E8E1D8] px-5 py-3 font-semibold text-[#0A0A0B]">
-        На главную
-      </button>
+      <button type="button" onClick={() => navigate(ROUTES.home)} className="mt-8 rounded-full bg-[#E8E1D8] px-5 py-3 font-semibold text-[#0A0A0B]">На главную</button>
     </main>
   );
 }
@@ -1308,11 +1375,13 @@ export default function App() {
     if (route === ROUTES.team) return <TeamPage />;
     if (route === ROUTES.process) return <ProcessPage />;
     if (route === ROUTES.contact) return <ContactPage />;
+
     if (route.startsWith("/cases/")) {
       const id = route.split("/").filter(Boolean).pop();
       const item = CASES.find((currentCase) => currentCase.id === id);
       return <CaseDetailPage item={item} navigate={navigate} />;
     }
+
     return <NotFound navigate={navigate} />;
   }, [route, navigate]);
 

@@ -10,12 +10,13 @@
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
-    "framer-motion": "latest",
     "vite": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "framer-motion": "latest"
+  },
+  "devDependencies": {
     "tailwindcss": "latest",
     "@tailwindcss/vite": "latest"
-  },
-  "devDependencies": {}
+  }
 }
