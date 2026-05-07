@@ -307,27 +307,6 @@ const CASES = [
     gallery: Array.from({ length: 6 }, (_, index) => `/assets/cases/portal-13/gallery/${String(index + 1).padStart(2, "0")}.webp`),
   },
   {
-    id: "music-show-pilot",
-    title: "Шоу для музыкантов / пилот",
-    shortTitle: "Музыкальное шоу",
-    type: "Шоу и медиаформаты",
-    priority: "Креативный кейс",
-    category: "Шоу и медиаформаты",
-    route: "/cases/music-show-pilot",
-    cover: "/assets/cases/music-show/cover.webp",
-    loop: "/assets/cases/music-show/cover-loop.webp",
-    video: "/assets/cases/music-show/trailer.mp4",
-    lead: "Пилот формата: артисты, тайминг, конкурсная механика, выпуск, монтаж и медиаупаковка.",
-    scale: "пилот и разработка формата",
-    role: "разработка формата, съёмочная логика, монтажная структура, упаковка выпуска",
-    task: "собрать выпуск, в котором видны процесс, напряжение, характеры участников и понятный формат",
-    team: "продюсирование, режиссура, съёмка, звук, монтаж, графика",
-    deliverables: ["выпуск", "короткий трейлер", "нарезки для соцсетей", "закулисные материалы"],
-    result: "доказательство форматного мышления и производственного процесса",
-    applicability: "YouTube-шоу, брендированные форматы, артистические спецпроекты, медиапилоты",
-    gallery: Array.from({ length: 6 }, (_, index) => `/assets/cases/music-show/gallery/${String(index + 1).padStart(2, "0")}.webp`),
-  },
-  {
     id: "short-film-ai-students",
     title: "Короткий метр / ИИ и студенты",
     shortTitle: "Короткий метр",
@@ -600,14 +579,14 @@ function Nav({ route, navigate }) {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[999] lg:hidden"
           >
-            <div className="absolute inset-0 bg-[#0A0A0B]/96 backdrop-blur-[44px]" style={{ backdropFilter: "blur(44px)", WebkitBackdropFilter: "blur(44px)" }} onClick={() => setOpen(false)} />
+            <div className="absolute inset-0 bg-[#020203]/[0.992] backdrop-blur-[110px]" style={{ backdropFilter: "blur(110px) saturate(40%) brightness(35%)", WebkitBackdropFilter: "blur(110px) saturate(40%) brightness(35%)" }} onClick={() => setOpen(false)} />
 
             <motion.div
               initial={{ opacity: 0, scale: 0.96, y: 12 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.98, y: 12 }}
               transition={{ duration: 0.22 }}
-              className="relative flex h-[100dvh] flex-col overflow-y-auto overscroll-contain px-6 py-6 text-center"
+              className="relative flex h-[100dvh] flex-col overflow-y-auto overscroll-contain bg-[#020203]/85 px-6 py-6 text-center"
               onTouchMove={(event) => event.stopPropagation()}
             >
               <button type="button" onClick={() => setOpen(false)} className="absolute right-4 top-4 rounded-full border border-[#E8E1D8]/15 bg-[#0A0A0B]/35 p-3" aria-label="Закрыть меню">
@@ -932,17 +911,83 @@ function TeamCard({ member, index, compact = false }) {
   );
 }
 
-function TeamPreview() {
+function TeamCarousel() {
+  const [index, setIndex] = useState(0);
+  const total = TEAM_MEMBERS.length;
+  const active = TEAM_MEMBERS[index % total];
+
+  const goPrev = () => setIndex((current) => (current - 1 + total) % total);
+  const goNext = () => setIndex((current) => (current + 1) % total);
+
+  const getOffset = (itemIndex) => {
+    let offset = itemIndex - index;
+    if (offset > total / 2) offset -= total;
+    if (offset < -total / 2) offset += total;
+    return offset;
+  };
+
   return (
-    <section className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
-      <SectionTitle compact eyebrow="команда" title="Команда Missing Frame" text="Ключевые направления проекта: управление, техника, коммерция и креатив." />
-      <div className="grid items-stretch gap-5 md:grid-cols-2 xl:grid-cols-4">
-        {TEAM_MEMBERS.map((member, index) => (
-          <TeamCard key={member.id} member={member} index={index} compact />
-        ))}
+    <section className="mx-auto max-w-7xl overflow-hidden px-4 py-12 md:px-6 md:py-16">
+      <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div>
+          <Eyebrow>команда</Eyebrow>
+          <div className="mb-3 flex items-center gap-3 text-sm text-[#E8E1D8]/50">
+            <span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1">{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span>
+            <span>{active.role}</span>
+          </div>
+          <h2 className="text-3xl font-semibold tracking-[-0.045em] md:text-5xl">Команда Missing Frame</h2>
+          <p className="mt-3 max-w-xl text-sm leading-6 text-[#E8E1D8]/58">Управление, техника, коммерция и креатив в одной системе.</p>
+        </div>
+      </div>
+
+      <div className="md:hidden">
+        <TeamCard member={active} index={index} compact />
+      </div>
+
+      <div className="relative mx-auto hidden h-[690px] max-w-6xl md:block">
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-28 bg-gradient-to-r from-[#0A0A0B] to-transparent md:w-44" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-28 bg-gradient-to-l from-[#0A0A0B] to-transparent md:w-44" />
+        {TEAM_MEMBERS.map((member, memberIndex) => {
+          const offset = getOffset(memberIndex);
+          const absOffset = Math.abs(offset);
+          const isActive = offset === 0;
+          const translate = offset * 245;
+          const scale = isActive ? 1 : absOffset === 1 ? 0.82 : 0.66;
+          const opacity = isActive ? 1 : absOffset === 1 ? 0.5 : absOffset === 2 ? 0.18 : 0;
+          const blur = isActive ? "blur(0px)" : absOffset === 1 ? "blur(2px)" : "blur(7px)";
+          const zIndex = 20 - absOffset;
+
+          return (
+            <motion.div
+              key={member.id}
+              className="absolute left-1/2 top-0 h-full w-[78%] max-w-[430px] -translate-x-1/2"
+              animate={{ x: translate, scale, opacity, filter: blur, zIndex }}
+              transition={{ type: "spring", stiffness: 120, damping: 22, mass: 0.9 }}
+              style={{ transformOrigin: "center", pointerEvents: "none" }}
+            >
+              <TeamCard member={member} index={memberIndex} compact />
+            </motion.div>
+          );
+        })}
+      </div>
+
+      <div className="mt-6 flex items-center justify-center gap-3">
+        <button type="button" onClick={goPrev} className="rounded-full border border-[#E8E1D8]/15 bg-[#E8E1D8]/[0.04] p-4 transition hover:border-[#E8E1D8]/40" aria-label="Предыдущий участник команды">
+          <ChevronLeft className="h-5 w-5" />
+        </button>
+        <div className="rounded-full border border-[#E8E1D8]/12 px-5 py-4 text-sm text-[#E8E1D8]/70">
+          {active.name}
+        </div>
+        <button type="button" onClick={goNext} className="rounded-full border border-[#E8E1D8]/15 bg-[#E8E1D8]/[0.04] p-4 transition hover:border-[#E8E1D8]/40" aria-label="Следующий участник команды">
+          <ChevronRight className="h-5 w-5" />
+        </button>
       </div>
     </section>
   );
+}
+
+function TeamPreview() {
+  return <TeamCarousel />;
 }
 
 function ServicesTeaser({ navigate }) {
