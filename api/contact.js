@@ -15,10 +15,19 @@ async function sendTelegramMessage({ token, chatId, message }) {
   const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ chat_id: chatId, text: message, parse_mode: "HTML", disable_web_page_preview: true }),
+    body: JSON.stringify({
+      chat_id: chatId,
+      text: message,
+      parse_mode: "HTML",
+      disable_web_page_preview: true,
+    }),
   });
 
-  if (!response.ok) throw new Error(await response.text());
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Telegram failed for chat ${chatId}: ${errorText}`);
+  }
+
   return response.json();
 }
 
@@ -30,7 +39,9 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  if (req.method !== "POST") return res.status(405).json({ ok: false, error: "Method not allowed" });
+  if (req.method !== "POST") {
+    return res.status(405).json({ ok: false, error: "Method not allowed" });
+  }
 
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatIds = getChatIds();
@@ -39,11 +50,15 @@ export default async function handler(req, res) {
     return res.status(500).json({ ok: false, error: "Telegram env variables are not configured" });
   }
 
-  const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+  let body = req.body;
+  if (typeof body === "string") body = JSON.parse(body);
+
   const projectName = escapeHtml(body.projectName);
   const description = escapeHtml(body.description);
   const email = escapeHtml(body.email);
   const contact = escapeHtml(body.contact);
+  const budget = escapeHtml(body.budget);
+  const format = escapeHtml(body.format);
   const page = escapeHtml(body.page);
 
   if (!projectName || !description || !email) {
@@ -51,12 +66,14 @@ export default async function handler(req, res) {
   }
 
   const message = [
-    "<b>Новая заявка с сайта Missing Frame</b>",
+    "<b>Новая задача с сайта Missing Frame</b>",
     "",
-    `<b>Проект:</b> ${projectName}`,
+    `<b>Формат:</b> ${format || "не выбран"}`,
+    `<b>Что планируют:</b> ${projectName}`,
     `<b>Описание:</b> ${description}`,
     `<b>Email:</b> ${email}`,
     `<b>Контакт:</b> ${contact || "не указан"}`,
+    `<b>Бюджет / сроки:</b> ${budget || "не указано"}`,
     "",
     `<b>Страница:</b> ${page}`,
   ].join("\n");
@@ -65,7 +82,7 @@ export default async function handler(req, res) {
   const failed = results.map((result, index) => ({ result, chatId: chatIds[index] })).filter((item) => item.result.status === "rejected");
 
   if (failed.length === chatIds.length) {
-    return res.status(500).json({ ok: false, error: "Telegram request failed for all chat IDs" });
+    return res.status(500).json({ ok: false, error: "Telegram request failed for all chat IDs", failedChatIds: failed.map((item) => item.chatId) });
   }
 
   return res.status(200).json({ ok: true, sentTo: chatIds.length - failed.length, failedChatIds: failed.map((item) => item.chatId) });
