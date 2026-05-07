@@ -1,4 +1,4 @@
-# Missing Frame site
+# Missing Frame Site
 
 ## Запуск локально
 
@@ -12,14 +12,6 @@ npm run dev
 ```bash
 npm run build
 npm run preview
-```
-
-## Vercel env
-
-```env
-TELEGRAM_BOT_TOKEN=your_bot_token
-TELEGRAM_CHAT_IDS=123456789,-1009876543210
-VITE_FORM_ENDPOINT=/api/contact
 ```
 
 ## Материалы
@@ -36,10 +28,20 @@ public/assets/team/creative.png
 Кейсы:
 
 ```txt
-public/assets/cases/glowbyte/cover.webp
-public/assets/cases/glowbyte/cover-loop.webp
-public/assets/cases/glowbyte/aftermovie.mp4
-public/assets/cases/glowbyte/gallery/01.webp
+public/assets/cases/<case-folder>/cover.webp
+public/assets/cases/<case-folder>/cover-loop.webp
+public/assets/cases/<case-folder>/<video>.mp4
+public/assets/cases/<case-folder>/gallery/01.webp
 ```
 
-Для мобильной версии карусель показывает одну карточку без наложения текста поверх изображения. На десктопе включается наложенная карусель с blur/opacity.
+## Telegram-заявки
+
+В Vercel добавь переменные:
+
+```env
+TELEGRAM_BOT_TOKEN=...
+TELEGRAM_CHAT_IDS=123456789,-1001234567890
+VITE_FORM_ENDPOINT=/api/contact
+```
+
+`TELEGRAM_CHAT_IDS` поддерживает несколько ID через запятую.

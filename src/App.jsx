@@ -1,23 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-const ROUTES = {
-  home: "/",
-  services: "/services",
-  cases: "/cases",
-  team: "/team",
-  process: "/process",
-  contact: "/contact",
-};
-
-const ASSETS = {
-  heroVideoWebm: "/assets/hero/mf-backstage-loop.webm",
-  heroVideoMp4: "/assets/hero/mf-backstage-loop.mp4",
-  heroPoster: "/assets/hero/mf-backstage-poster.webp",
-};
-
-const FORM_ENDPOINT = import.meta.env.VITE_FORM_ENDPOINT || "/api/contact";
-
 function IconBase({ className = "h-4 w-4", children }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -79,16 +62,6 @@ function Clapperboard(props) {
   );
 }
 
-function Download(props) {
-  return (
-    <IconBase {...props}>
-      <path d="M12 3v12" />
-      <path d="m7 10 5 5 5-5" />
-      <path d="M5 21h14" />
-    </IconBase>
-  );
-}
-
 function Film(props) {
   return (
     <IconBase {...props}>
@@ -112,20 +85,20 @@ function Mail(props) {
   );
 }
 
-function Phone(props) {
-  return (
-    <IconBase {...props}>
-      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.86 19.86 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.86 19.86 0 0 1 2.08 4.18 2 2 0 0 1 4.06 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.63 2.62a2 2 0 0 1-.45 2.11L8 9.91a16 16 0 0 0 6.09 6.09l1.46-1.24a2 2 0 0 1 2.11-.45c.84.3 1.72.51 2.62.63A2 2 0 0 1 22 16.92z" />
-    </IconBase>
-  );
-}
-
 function Menu(props) {
   return (
     <IconBase {...props}>
       <path d="M4 6h16" />
       <path d="M4 12h16" />
       <path d="M4 18h16" />
+    </IconBase>
+  );
+}
+
+function Phone(props) {
+  return (
+    <IconBase {...props}>
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.86 19.86 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.86 19.86 0 0 1 2.08 4.18 2 2 0 0 1 4.06 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.63 2.62a2 2 0 0 1-.45 2.11L8 9.91a16 16 0 0 0 6.09 6.09l1.46-1.24a2 2 0 0 1 2.11-.45c.84.3 1.72.51 2.62.63A2 2 0 0 1 22 16.92z" />
     </IconBase>
   );
 }
@@ -190,6 +163,22 @@ function TelegramIcon({ className = "h-4 w-4" }) {
   );
 }
 
+const ASSETS = {
+  heroVideoWebm: "/assets/hero/mf-backstage-loop.webm",
+  heroVideoMp4: "/assets/hero/mf-backstage-loop.mp4",
+  heroPoster: "/assets/hero/mf-backstage-poster.webp",
+};
+
+const FORM_ENDPOINT = import.meta.env.VITE_FORM_ENDPOINT || "/api/contact";
+
+const ROUTES = {
+  home: "/",
+  services: "/services",
+  cases: "/cases",
+  process: "/process",
+  contact: "/contact",
+};
+
 const CASES = [
   {
     id: "glowbyte-corporate-event",
@@ -223,7 +212,7 @@ const CASES = [
     cover: "/assets/cases/mediavypusknoy-2025/cover.webp",
     loop: "/assets/cases/mediavypusknoy-2025/cover-loop.webp",
     video: "/assets/cases/mediavypusknoy-2025/recap.mp4",
-    lead: "Опыт крупного события с большим количеством участников, бюджетом, таймингом, зонами ответственности и рисками.",
+    lead: "Опыт крупного события с большим количеством участников, таймингом, зонами ответственности и рисками.",
     scale: "около 700 участников, бюджет порядка 2 млн ₽",
     role: "организационная и медиапроизводственная координация, участие в визуальной и событийной сборке",
     task: "собрать событие и медиаматериалы в плотном операционном контексте без потери ключевых моментов",
@@ -361,6 +350,49 @@ const CASES = [
   },
 ];
 
+const TEAM_MEMBERS = [
+  {
+    id: "lead",
+    role: "Главный руководитель",
+    name: "Антон Гиззатов",
+    description: "Основатель и продюсер Missing Frame. Отвечает за стратегию, проектное управление и производственную систему продакшена; в опыте — 200+ мероприятий, команды до 80 специалистов и проекты с бюджетами до 20 млн рублей.",
+    email: "lead@missingframe.ru",
+    phone: "+7 (900) 027-27-74",
+    telegram: "https://t.me/Rovers1236",
+    photo: "/assets/team/lead.png",
+  },
+  {
+    id: "tech",
+    role: "Глава технического направления",
+    name: "Александр Гимадинов",
+    description: "Руководитель технического направления. Отвечает за производственный пайплайн, съёмочную часть, технический контроль качества и реализацию креативных решений.",
+    email: "tech@missingframe.ru",
+    phone: "+7 (922) 100-32-30",
+    telegram: "https://t.me/AustinBluethy",
+    photo: "/assets/team/tech.png",
+  },
+  {
+    id: "commercial",
+    role: "Глава коммерческого направления",
+    name: "Екатерина Евтеева",
+    description: "Руководитель Marketing & Growth. Отвечает за коммуникации, партнёрства, лидогенерацию и коммерческую упаковку возможностей продакшена.",
+    email: "commercial@missingframe.ru",
+    phone: "+7 (906) 019-10-42",
+    telegram: "https://t.me/nesozzy",
+    photo: "/assets/team/commercial.png",
+  },
+  {
+    id: "creative",
+    role: "Глава креативного направления",
+    name: "Анна Беликова",
+    description: "Руководитель креативного направления. Отвечает за концепции, сценарную логику, визуальную цельность и соответствие итогового контента задаче клиента.",
+    email: "creative@missingframe.ru",
+    phone: "+7 (916) 849-22-32",
+    telegram: "https://t.me/dedus3000",
+    photo: "/assets/team/creative.png",
+  },
+];
+
 const SERVICES = [
   {
     icon: Camera,
@@ -389,19 +421,16 @@ const SERVICES = [
   {
     icon: Play,
     title: "Вертикальный контент",
-    text: "Короткие вертикальные видео, экспертные нарезки, итоги дня, стенд за 30 секунд, 3 тезиса со сессии и закулисье.",
+    text: "Короткие вертикальные видео, экспертные нарезки, итоги дня, стенд за 30 секунд, 3 тезиса со сессии, закулисье и быстрый итоговый ролик.",
     tags: ["рилсы", "shorts", "recap"],
   },
   {
     icon: ShieldCheck,
     title: "Производственная система",
-    text: "Бриф, роли, список кадров, маршруты съёмки, дедлайны, выдача материалов, архив и аналитический разбор.",
+    text: "Бриф, роли, список кадров, маршруты съёмки, дедлайны, выдача материалов, архив, аналитический разбор и повторное использование контента.",
     tags: ["бриф", "CRM", "выдача", "разбор"],
   },
 ];
-
-const FILTERS = ["Все", "События и бизнес", "Бренды и партнёры", "Клипы и креатив", "Шоу и медиаформаты", "Процесс и система"];
-const PARTNERS = ["Glowbyte", "Медиавыпускной", "SVVFIT", "Спортивные события"];
 
 const SERVICE_PACKS = [
   ["Пакет для партнёра", "Стенд, представители, активность, интервью, короткие видео и материалы для отчёта."],
@@ -438,48 +467,8 @@ const PROCESS_TOOLS = [
   "Цикл улучшений",
 ];
 
-const TEAM_MEMBERS = [
-  {
-    id: "lead",
-    role: "Главный руководитель",
-    name: "Антон Гиззатов",
-    description: "Основатель и продюсер Missing Frame. Отвечает за стратегию, проектное управление и производственную систему продакшена; в опыте — 200+ мероприятий, команды до 80 специалистов и проекты с бюджетами до 20 млн рублей.",
-    email: "lead@missingframe.ru",
-    phone: "+7 (900) 027-27-74",
-    telegram: "https://t.me/Rovers1236",
-    photo: "/assets/team/lead.png",
-  },
-  {
-    id: "tech",
-    role: "Глава технического направления",
-    name: "Александр гимадинов",
-    description: "Руководитель технического направления. Отвечает за производственный пайплайн, съёмочную часть, технический контроль качества и реализацию креативных решений.",
-    email: "tech@missingframe.ru",
-    phone: "+7 (922) 100-32-30",
-    telegram: "https://t.me/AustinBluethy",
-    photo: "/assets/team/tech.png",
-  },
-  {
-    id: "commercial",
-    role: "Глава коммерческого направления",
-    name: "Екатерина Евтеева",
-    description: "Руководитель Marketing & Growth. Отвечает за коммуникации, партнёрства, лидогенерацию и коммерческую упаковку возможностей продакшена.",
-    email: "commercial@missingframe.ru",
-    phone: "+7 (906) 019-10-42",
-    telegram: "https://t.me/nesozzy",
-    photo: "/assets/team/commercial.png",
-  },
-  {
-    id: "creative",
-    role: "Глава креативного направления",
-    name: "Анна Беликова",
-    description: "Руководитель креативного направления. Отвечает за концепции, сценарную логику, визуальную цельность и соответствие итогового контента задаче клиента.",
-    email: "creative@missingframe.ru",
-    phone: "+7 (916) 849-22-32",
-    telegram: "https://t.me/dedus3000",
-    photo: "/assets/team/creative.png",
-  },
-];
+const FILTERS = ["Все", "События и бизнес", "Бренды и партнёры", "Клипы и креатив", "Шоу и медиаформаты", "Процесс и система"];
+const PARTNERS = ["Glowbyte", "Медиавыпускной", "SVVFIT", "Спортивные события"];
 
 function cls(...items) {
   return items.filter(Boolean).join(" ");
@@ -524,7 +513,7 @@ function Noise() {
 
 function PageShell({ children }) {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#0A0A0B] text-[#E8E1D8] selection:bg-[#8F1F23] selection:text-[#E8E1D8]">
+    <div className="min-h-screen bg-[#0A0A0B] text-[#E8E1D8] selection:bg-[#8F1F23] selection:text-[#E8E1D8]">
       <div className="fixed inset-0 -z-10 overflow-hidden bg-[#0A0A0B]">
         <div className="absolute -left-48 top-0 h-[520px] w-[520px] rounded-full bg-[#340F12] opacity-70 blur-[140px]" />
         <div className="absolute right-[-180px] top-[20%] h-[420px] w-[420px] rounded-full bg-[#8F1F23] opacity-25 blur-[160px]" />
@@ -536,30 +525,31 @@ function PageShell({ children }) {
   );
 }
 
-function Eyebrow({ children }) {
-  return <div className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#8F1F23]">{children}</div>;
-}
-
-function SectionTitle({ eyebrow, title, text, compact = false }) {
-  return (
-    <div className={cls("mx-auto max-w-3xl", compact ? "mb-8" : "mb-12")}>
-      {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : null}
-      <h2 className="text-3xl font-semibold tracking-[-0.04em] md:text-5xl">{title}</h2>
-      {text ? <p className="mt-5 text-base leading-7 text-[#E8E1D8]/65 md:text-lg">{text}</p> : null}
-    </div>
-  );
-}
-
 function Nav({ route, navigate }) {
   const [open, setOpen] = useState(false);
   const links = [
     [ROUTES.home, "Главная страница"],
     [ROUTES.services, "Услуги"],
     [ROUTES.cases, "Кейсы"],
-    [ROUTES.team, "Команда"],
     [ROUTES.process, "Процесс"],
     [ROUTES.contact, "Контакты"],
   ];
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const previousOverflow = document.body.style.overflow;
+    const previousTouchAction = document.body.style.touchAction;
+
+    if (open) {
+      document.body.style.overflow = "hidden";
+      document.body.style.touchAction = "none";
+    }
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.body.style.touchAction = previousTouchAction;
+    };
+  }, [open]);
 
   return (
     <header className="sticky top-0 z-40 border-b border-[#E8E1D8]/10 bg-[#0A0A0B]/80 backdrop-blur-xl">
@@ -597,56 +587,82 @@ function Nav({ route, navigate }) {
           </button>
         </div>
 
-        <button type="button" onClick={() => setOpen(true)} className="rounded-full border border-[#E8E1D8]/15 p-3 lg:hidden" aria-label="Открыть меню">
+        <button type="button" onClick={() => setOpen(true)} className="rounded-full border border-[#E8E1D8]/15 p-2 lg:hidden" aria-label="Открыть меню">
           <Menu className="h-5 w-5" />
         </button>
       </div>
 
       <AnimatePresence>
         {open && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 lg:hidden">
-            <button type="button" aria-label="Закрыть меню" onClick={() => setOpen(false)} className="absolute inset-0 h-full w-full bg-[#0A0A0B]/90 backdrop-blur-2xl" />
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[999] lg:hidden"
+          >
+            <div className="absolute inset-0 bg-[#0A0A0B]/96 backdrop-blur-[44px]" style={{ backdropFilter: "blur(44px)", WebkitBackdropFilter: "blur(44px)" }} onClick={() => setOpen(false)} />
+
             <motion.div
-              initial={{ opacity: 0, scale: 0.96, y: 10 }}
+              initial={{ opacity: 0, scale: 0.96, y: 12 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.98, y: 10 }}
+              exit={{ opacity: 0, scale: 0.98, y: 12 }}
               transition={{ duration: 0.22 }}
-              className="relative flex min-h-dvh flex-col items-center justify-center px-6 text-center"
+              className="relative flex h-[100dvh] flex-col overflow-y-auto overscroll-contain px-6 py-6 text-center"
+              onTouchMove={(event) => event.stopPropagation()}
             >
-              <button type="button" onClick={() => setOpen(false)} className="absolute right-4 top-4 rounded-full border border-[#E8E1D8]/15 p-3" aria-label="Закрыть меню">
+              <button type="button" onClick={() => setOpen(false)} className="absolute right-4 top-4 rounded-full border border-[#E8E1D8]/15 bg-[#0A0A0B]/35 p-3" aria-label="Закрыть меню">
                 <X className="h-5 w-5" />
               </button>
-              <div className="mb-10 text-sm uppercase tracking-[0.28em] text-[#E8E1D8]/65">Missing Frame</div>
-              <div className="flex w-full max-w-sm flex-col gap-4">
-                {links.map(([href, label]) => (
-                  <button
-                    type="button"
-                    key={href}
-                    onClick={() => {
-                      navigate(href);
-                      setOpen(false);
-                    }}
-                    className="rounded-2xl border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] px-6 py-4 text-center text-2xl font-medium text-[#E8E1D8] transition hover:border-[#E8E1D8]/25"
-                  >
-                    {label}
-                  </button>
-                ))}
+
+              <div className="my-auto flex min-h-[620px] flex-col items-center justify-center py-16">
+                <div className="mb-10 text-sm uppercase tracking-[0.28em] text-[#E8E1D8]/65">Missing Frame</div>
+
+                <div className="flex w-full max-w-sm flex-col gap-4">
+                  {links.map(([href, label]) => (
+                    <button
+                      type="button"
+                      key={href}
+                      onClick={() => {
+                        navigate(href);
+                        setOpen(false);
+                      }}
+                      className="rounded-2xl border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.06] px-6 py-4 text-center text-2xl font-medium text-[#E8E1D8] shadow-2xl shadow-black/30 transition hover:border-[#E8E1D8]/25"
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigate(ROUTES.contact);
+                    setOpen(false);
+                  }}
+                  className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#8F1F23] px-6 py-3 text-base font-semibold text-[#E8E1D8]"
+                >
+                  Создать проект <ArrowRight className="h-4 w-4" />
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={() => {
-                  navigate(ROUTES.contact);
-                  setOpen(false);
-                }}
-                className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#8F1F23] px-6 py-3 text-base font-semibold text-[#E8E1D8]"
-              >
-                Создать проект <ArrowRight className="h-4 w-4" />
-              </button>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
     </header>
+  );
+}
+
+function Eyebrow({ children }) {
+  return <div className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#8F1F23]">{children}</div>;
+}
+
+function SectionTitle({ eyebrow, title, text, compact = false }) {
+  return (
+    <div className={cls("mx-auto max-w-3xl", compact ? "mb-8" : "mb-12")}>
+      {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : null}
+      <h2 className="text-3xl font-semibold tracking-[-0.04em] md:text-5xl">{title}</h2>
+      {text ? <p className="mt-5 text-base leading-7 text-[#E8E1D8]/65 md:text-lg">{text}</p> : null}
+    </div>
   );
 }
 
@@ -670,39 +686,11 @@ function MediaPlaceholder({ label = "медиа", className = "", src, alt = "" 
 
   return (
     <div className={cls("relative overflow-hidden border border-[#E8E1D8]/10 bg-[#111]", className)}>
-      {src && !failed ? <img src={src} alt={alt || label} onError={() => setFailed(true)} className="h-full w-full object-cover opacity-80" /> : <FallbackVisual label={label} />}
-    </div>
-  );
-}
-
-function HeroVideo() {
-  const [failed, setFailed] = useState(false);
-
-  return (
-    <div className="relative aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-[#0A0A0B]">
-      {!failed ? (
-        <video className="h-full w-full object-cover opacity-75" poster={ASSETS.heroPoster} autoPlay muted loop playsInline onError={() => setFailed(true)}>
-          <source src={ASSETS.heroVideoWebm} type="video/webm" />
-          <source src={ASSETS.heroVideoMp4} type="video/mp4" />
-        </video>
+      {src && !failed ? (
+        <img src={src} alt={alt || label} onError={() => setFailed(true)} className="h-full w-full object-cover opacity-80" />
       ) : (
-        <FallbackVisual label="закулисный фон" />
+        <FallbackVisual label={label} />
       )}
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,11,0.05),rgba(10,10,11,0.82)),radial-gradient(circle_at_22%_16%,rgba(143,31,35,0.45),transparent_30%)]" />
-      <div className="absolute left-5 right-5 top-5 hidden items-center justify-between text-xs uppercase tracking-[0.2em] text-[#E8E1D8]/55 sm:flex">
-        <span>закулисный фон</span>
-        <span>цикличное видео</span>
-      </div>
-      <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-[#E8E1D8]/12 bg-[#0A0A0B]/55 p-4 backdrop-blur-md sm:p-5">
-        <div className="mb-3 flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#8F1F23]">
-          <Sparkles className="h-4 w-4" /> ключевые факты
-        </div>
-        <div className="grid grid-cols-3 gap-2 text-center sm:gap-3">
-          <Metric value="40+" label="событий" />
-          <Metric value="700" label="участников" />
-          <Metric value="6+2" label="медиа-команда" />
-        </div>
-      </div>
     </div>
   );
 }
@@ -726,9 +714,39 @@ function TeamPhoto({ src, alt, index }) {
   );
 }
 
+function HeroVideo() {
+  const [failed, setFailed] = useState(false);
+
+  return (
+    <div className="relative aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-[#0A0A0B]">
+      {!failed ? (
+        <video className="h-full w-full object-cover opacity-75" poster={ASSETS.heroPoster} autoPlay muted loop playsInline onError={() => setFailed(true)}>
+          <source src={ASSETS.heroVideoWebm} type="video/webm" />
+          <source src={ASSETS.heroVideoMp4} type="video/mp4" />
+        </video>
+      ) : (
+        <FallbackVisual label="закулисный фон" />
+      )}
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,11,0.05),rgba(10,10,11,0.82)),radial-gradient(circle_at_22%_16%,rgba(143,31,35,0.45),transparent_30%)]" />
+      <div className="absolute left-5 right-5 top-5 hidden items-center justify-between text-xs uppercase tracking-[0.2em] text-[#E8E1D8]/55 sm:flex">
+        <span>закулисный фон</span>
+        <span>цикличное видео</span>
+      </div>
+      <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-[#E8E1D8]/12 bg-[#0A0A0B]/55 p-4 backdrop-blur-md sm:p-5">
+        <div className="mb-3 flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#8F1F23]"><Sparkles className="h-4 w-4" /> ключевые факты</div>
+        <div className="grid grid-cols-3 gap-2 text-center sm:gap-3">
+          <Metric value="40+" label="событий" />
+          <Metric value="700" label="участников" />
+          <Metric value="6+2" label="команда" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Metric({ value, label }) {
   return (
-    <div className="rounded-2xl border border-[#E8E1D8]/10 bg-[#E8E1D8]/5 p-2 sm:p-3">
+    <div className="min-w-0 rounded-2xl border border-[#E8E1D8]/10 bg-[#E8E1D8]/5 p-3">
       <div className="text-xl font-semibold tracking-[-0.05em] sm:text-2xl">{value}</div>
       <div className="mt-1 break-words text-[9px] uppercase tracking-[0.12em] text-[#E8E1D8]/45 sm:text-[10px] sm:tracking-[0.18em]">{label}</div>
     </div>
@@ -737,7 +755,7 @@ function Metric({ value, label }) {
 
 function Hero({ navigate }) {
   return (
-    <section className="relative mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
+    <section className="relative mx-auto max-w-7xl px-4 py-10 md:px-6 md:py-16">
       <div className="grid items-center gap-8 lg:grid-cols-[1fr_0.82fr]">
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65 }}>
           <h1 className="max-w-4xl text-6xl font-semibold tracking-[-0.075em] md:text-8xl lg:text-9xl">Missing Frame</h1>
@@ -746,6 +764,7 @@ function Hero({ navigate }) {
             Создать проект <ArrowRight className="h-4 w-4" />
           </button>
         </motion.div>
+
         <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.65, delay: 0.12 }} className="relative">
           <div className="absolute -inset-4 rounded-[2rem] bg-[#8F1F23]/10 blur-3xl" />
           <div className="relative overflow-hidden rounded-[2rem] border border-[#E8E1D8]/12 bg-[#E8E1D8]/5 p-3">
@@ -762,7 +781,7 @@ function PartnersStrip() {
     <section className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-10">
       <div className="rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-5 md:p-6">
         <Eyebrow>партнёры и проекты</Eyebrow>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {PARTNERS.map((partner) => (
             <div key={partner} className="flex min-h-20 items-center justify-center rounded-2xl border border-[#E8E1D8]/10 bg-[#0A0A0B]/35 px-4 text-center text-sm font-semibold text-[#E8E1D8]/70">
               {partner}
@@ -800,9 +819,7 @@ function CasesCarousel({ navigate, items = CASES, title = "Кейсы", text = "
         <div>
           <Eyebrow>кейсы</Eyebrow>
           <div className="mb-3 flex items-center gap-3 text-sm text-[#E8E1D8]/50">
-            <span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1">
-              {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
-            </span>
+            <span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1">{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span>
             <span>{active.shortTitle}</span>
           </div>
           <h2 className="text-3xl font-semibold tracking-[-0.045em] md:text-5xl">{title}</h2>
@@ -818,9 +835,7 @@ function CasesCarousel({ navigate, items = CASES, title = "Кейсы", text = "
           <MediaPlaceholder src={active.loop || active.cover} alt={active.title} label={`${active.shortTitle}: обложка`} className="aspect-[4/5] rounded-[1.6rem]" />
           <div className="p-4">
             <div className="mb-3 flex items-center justify-between gap-3">
-              <span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1 text-xs text-[#E8E1D8]/60">
-                {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
-              </span>
+              <span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1 text-xs text-[#E8E1D8]/60">{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span>
               <span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1 text-[10px] uppercase tracking-[0.15em] text-[#E8E1D8]/55">{active.type}</span>
             </div>
             <h3 className="text-4xl font-semibold leading-[0.95] tracking-[-0.04em]">{active.title}</h3>
@@ -830,8 +845,8 @@ function CasesCarousel({ navigate, items = CASES, title = "Кейсы", text = "
       </div>
 
       <div className="relative mx-auto hidden h-[540px] max-w-6xl md:block">
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-44 bg-gradient-to-r from-[#0A0A0B] to-transparent" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-44 bg-gradient-to-l from-[#0A0A0B] to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-28 bg-gradient-to-r from-[#0A0A0B] to-transparent md:w-44" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-28 bg-gradient-to-l from-[#0A0A0B] to-transparent md:w-44" />
         {safeItems.map((item, itemIndex) => {
           const offset = getOffset(itemIndex);
           const absOffset = Math.abs(offset);
@@ -852,9 +867,7 @@ function CasesCarousel({ navigate, items = CASES, title = "Кейсы", text = "
             >
               <MediaPlaceholder src={item.loop || item.cover} alt={item.title} label={`${item.shortTitle}: обложка`} className="h-[68%] rounded-[1.65rem]" />
               <div className="absolute inset-3 rounded-[1.65rem] bg-[linear-gradient(180deg,rgba(10,10,11,0.04),rgba(10,10,11,0.9))]" />
-              <div className="absolute left-8 top-8 rounded-full border border-[#E8E1D8]/15 bg-[#0A0A0B]/55 px-3 py-1 text-xs text-[#E8E1D8]/65 backdrop-blur-md">
-                {String(itemIndex + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
-              </div>
+              <div className="absolute left-8 top-8 rounded-full border border-[#E8E1D8]/15 bg-[#0A0A0B]/55 px-3 py-1 text-xs text-[#E8E1D8]/65 backdrop-blur-md">{String(itemIndex + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</div>
               <div className="absolute bottom-8 left-8 right-8">
                 <div className="mb-3 inline-flex rounded-full border border-[#E8E1D8]/15 bg-[#0A0A0B]/55 px-3 py-1 text-xs uppercase tracking-[0.18em] text-[#E8E1D8]/65 backdrop-blur-md">{item.type}</div>
                 <h3 className="text-3xl font-semibold tracking-[-0.04em] md:text-5xl">{item.title}</h3>
@@ -880,9 +893,60 @@ function CasesCarousel({ navigate, items = CASES, title = "Кейсы", text = "
   );
 }
 
+function TeamContactRow({ email, phone, telegram }) {
+  const cleanPhone = phone.replace(/[^0-9+]/g, "");
+  const linkClass = "grid h-12 w-full min-w-0 grid-cols-[18px_58px_minmax(0,1fr)] items-center gap-2 overflow-hidden rounded-2xl border border-[#E8E1D8]/10 bg-[#0A0A0B]/35 px-3 text-sm text-[#E8E1D8]/72 transition hover:border-[#E8E1D8]/25 hover:text-[#E8E1D8]";
+  const labelClass = "min-w-0 text-[10px] uppercase tracking-[0.08em] text-[#E8E1D8]/38";
+  const valueClass = "block min-w-0 truncate text-left text-xs text-[#E8E1D8]/72";
+
+  return (
+    <div className="mt-auto grid gap-3 pt-5">
+      <a href={`mailto:${email}`} title={email} aria-label={`Написать на почту ${email}`} className={linkClass}>
+        <Mail className="h-4 w-4 shrink-0" />
+        <span className={labelClass}>Почта</span>
+        <span className={valueClass}>{email}</span>
+      </a>
+      <a href={`tel:${cleanPhone}`} title={phone} aria-label={`Позвонить ${phone}`} className={linkClass}>
+        <Phone className="h-4 w-4 shrink-0" />
+        <span className={labelClass}>Тел.</span>
+        <span className={valueClass}>{phone}</span>
+      </a>
+      <a href={telegram} target="_blank" rel="noreferrer" title="Telegram" aria-label="Открыть Telegram" className={linkClass}>
+        <TelegramIcon className="h-5 w-5 shrink-0" />
+        <span className={labelClass}>ТГ</span>
+        <span className={valueClass}>Открыть профиль</span>
+      </a>
+    </div>
+  );
+}
+
+function TeamCard({ member, index, compact = false }) {
+  return (
+    <div className="group flex h-full min-w-0 flex-col overflow-hidden rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-5">
+      <TeamPhoto src={member.photo} alt={member.name} index={index} />
+      <div className="mb-2 min-h-10 text-xs uppercase tracking-[0.18em] text-[#8F1F23]">{member.role}</div>
+      <h2 className="text-2xl font-semibold tracking-[-0.04em]">{member.name}</h2>
+      <p className={cls("mt-3 text-sm leading-6 text-[#E8E1D8]/60", compact ? "line-clamp-4" : "")}>{member.description}</p>
+      <TeamContactRow email={member.email} phone={member.phone} telegram={member.telegram} />
+    </div>
+  );
+}
+
+function TeamPreview() {
+  return (
+    <section className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
+      <SectionTitle compact eyebrow="команда" title="Команда Missing Frame" text="Ключевые направления проекта: управление, техника, коммерция и креатив." />
+      <div className="grid items-stretch gap-5 md:grid-cols-2 xl:grid-cols-4">
+        {TEAM_MEMBERS.map((member, index) => (
+          <TeamCard key={member.id} member={member} index={index} compact />
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function ServicesTeaser({ navigate }) {
   const previewServices = SERVICES.slice(0, 4);
-
   return (
     <section className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
       <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
@@ -900,9 +964,7 @@ function ServicesTeaser({ navigate }) {
           const Icon = service.icon;
           return (
             <div key={service.title} className="rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-5">
-              <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-2xl border border-[#E8E1D8]/12 bg-[#8F1F23]/12">
-                <Icon className="h-5 w-5" />
-              </div>
+              <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-2xl border border-[#E8E1D8]/12 bg-[#8F1F23]/12"><Icon className="h-5 w-5" /></div>
               <h3 className="text-xl font-semibold tracking-[-0.035em]">{service.title}</h3>
               <p className="mt-3 text-sm leading-6 text-[#E8E1D8]/58">{service.text}</p>
             </div>
@@ -919,6 +981,7 @@ function HomePage({ navigate }) {
       <Hero navigate={navigate} />
       <PartnersStrip />
       <CasesCarousel navigate={navigate} title="Избранные кейсы" text="Короткая витрина проектов. Подробности открываются отдельно." />
+      <TeamPreview />
       <ServicesTeaser navigate={navigate} />
       <ProjectStartBlock navigate={navigate} />
     </main>
@@ -934,15 +997,11 @@ function ServicesPage({ navigate }) {
           const Icon = service.icon;
           return (
             <div key={service.title} className="rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-6 transition hover:border-[#E8E1D8]/25">
-              <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-2xl border border-[#E8E1D8]/12 bg-[#8F1F23]/12">
-                <Icon className="h-5 w-5 text-[#E8E1D8]" />
-              </div>
+              <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-2xl border border-[#E8E1D8]/12 bg-[#8F1F23]/12"><Icon className="h-5 w-5 text-[#E8E1D8]" /></div>
               <h3 className="text-2xl font-semibold tracking-[-0.04em]">{service.title}</h3>
               <p className="mt-4 text-sm leading-6 text-[#E8E1D8]/62">{service.text}</p>
               <div className="mt-6 flex flex-wrap gap-2">
-                {service.tags.map((tag) => (
-                  <span key={tag} className="rounded-full border border-[#E8E1D8]/10 px-3 py-1 text-xs text-[#E8E1D8]/48">{tag}</span>
-                ))}
+                {service.tags.map((tag) => <span key={tag} className="rounded-full border border-[#E8E1D8]/10 px-3 py-1 text-xs text-[#E8E1D8]/48">{tag}</span>)}
               </div>
             </div>
           );
@@ -951,9 +1010,7 @@ function ServicesPage({ navigate }) {
       <ServicePacks />
       <DeliveryBlock />
       <div className="mt-10 flex justify-center">
-        <button type="button" onClick={() => navigate(ROUTES.contact)} className="inline-flex items-center gap-2 rounded-full bg-[#E8E1D8] px-5 py-3 font-semibold text-[#0A0A0B]">
-          Обсудить проект <ArrowRight className="h-4 w-4" />
-        </button>
+        <button type="button" onClick={() => navigate(ROUTES.contact)} className="inline-flex items-center gap-2 rounded-full bg-[#E8E1D8] px-5 py-3 font-semibold text-[#0A0A0B]">Обсудить проект <ArrowRight className="h-4 w-4" /></button>
       </div>
     </main>
   );
@@ -1000,26 +1057,16 @@ function DeliveryBlock() {
 function CasesPage({ navigate }) {
   const [filter, setFilter] = useState("Все");
   const visibleCases = useMemo(() => CASES.filter((item) => filter === "Все" || item.category === filter), [filter]);
-
   return (
     <main className="mx-auto max-w-7xl px-4 py-14 md:px-6 md:py-20">
       <SectionTitle eyebrow="портфолио" title="Кейсы Missing Frame" text="События, бренды, клипы, шоу и система работы." />
       <div className="mb-8 flex gap-2 overflow-x-auto pb-2">
         {FILTERS.map((item) => (
-          <button
-            type="button"
-            key={item}
-            onClick={() => setFilter(item)}
-            className={cls("shrink-0 rounded-full border px-4 py-2 text-sm transition", filter === item ? "border-[#E8E1D8] bg-[#E8E1D8] text-[#0A0A0B]" : "border-[#E8E1D8]/12 text-[#E8E1D8]/65 hover:border-[#E8E1D8]/35")}
-          >
-            {item}
-          </button>
+          <button type="button" key={item} onClick={() => setFilter(item)} className={cls("shrink-0 rounded-full border px-4 py-2 text-sm transition", filter === item ? "border-[#E8E1D8] bg-[#E8E1D8] text-[#0A0A0B]" : "border-[#E8E1D8]/12 text-[#E8E1D8]/65 hover:border-[#E8E1D8]/35")}>{item}</button>
         ))}
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {visibleCases.map((item) => (
-          <CaseCard key={item.id} item={item} navigate={navigate} />
-        ))}
+        {visibleCases.map((item) => <CaseCard key={item.id} item={item} navigate={navigate} />)}
       </div>
     </main>
   );
@@ -1036,9 +1083,7 @@ function CaseCard({ item, navigate }) {
         </div>
         <h3 className="text-2xl font-semibold tracking-[-0.04em]">{item.title}</h3>
         <p className="mt-3 line-clamp-3 text-sm leading-6 text-[#E8E1D8]/58">{item.lead}</p>
-        <div className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#E8E1D8]">
-          Открыть подробнее <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
-        </div>
+        <div className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#E8E1D8]">Открыть подробнее <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" /></div>
       </div>
     </button>
   );
@@ -1046,17 +1091,12 @@ function CaseCard({ item, navigate }) {
 
 function VideoBlock({ item }) {
   const [failed, setFailed] = useState(false);
-
   return (
     <div className="overflow-hidden rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-3">
       <div className="relative aspect-video overflow-hidden rounded-[1.45rem] bg-[#0A0A0B]">
         {!failed ? (
-          <video controls poster={item.cover} className="h-full w-full object-cover" onError={() => setFailed(true)}>
-            <source src={item.video} type="video/mp4" />
-          </video>
-        ) : (
-          <FallbackVisual label="основное видео" />
-        )}
+          <video controls poster={item.cover} className="h-full w-full object-cover" onError={() => setFailed(true)}><source src={item.video} type="video/mp4" /></video>
+        ) : <FallbackVisual label="основное видео" />}
         <div className="pointer-events-none absolute left-5 top-5 rounded-full border border-[#E8E1D8]/15 bg-[#0A0A0B]/60 px-3 py-1 text-xs uppercase tracking-[0.18em] text-[#E8E1D8]/55 backdrop-blur-md">основное видео</div>
       </div>
     </div>
@@ -1065,13 +1105,10 @@ function VideoBlock({ item }) {
 
 function CaseDetailPage({ item, navigate }) {
   if (!item) return <NotFound navigate={navigate} />;
-
   return (
     <main>
       <section className="mx-auto max-w-7xl px-4 py-10 md:px-6 md:py-16">
-        <button type="button" onClick={() => navigate(ROUTES.cases)} className="mb-8 inline-flex items-center gap-2 rounded-full border border-[#E8E1D8]/12 px-4 py-2 text-sm text-[#E8E1D8]/65 hover:border-[#E8E1D8]/35">
-          ← Все кейсы
-        </button>
+        <button type="button" onClick={() => navigate(ROUTES.cases)} className="mb-8 inline-flex items-center gap-2 rounded-full border border-[#E8E1D8]/12 px-4 py-2 text-sm text-[#E8E1D8]/65 hover:border-[#E8E1D8]/35">← Все кейсы</button>
         <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-end">
           <div>
             <Eyebrow>{item.type}</Eyebrow>
@@ -1085,7 +1122,6 @@ function CaseDetailPage({ item, navigate }) {
           <MediaPlaceholder src={item.cover} alt={item.title} label={`${item.shortTitle}: обложка`} className="aspect-[16/10] rounded-[2rem]" />
         </div>
       </section>
-
       <section className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12">
         <div className="grid gap-4 lg:grid-cols-3">
           <DetailBlock title="Задача" text={item.task} />
@@ -1096,36 +1132,25 @@ function CaseDetailPage({ item, navigate }) {
           <div className="rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-6">
             <h2 className="text-2xl font-semibold tracking-[-0.04em]">Материалы на выдачу</h2>
             <div className="mt-5 grid gap-2">
-              {item.deliverables.map((deliverable) => (
-                <div key={deliverable} className="flex items-start gap-3 rounded-2xl border border-[#E8E1D8]/[0.08] bg-[#0A0A0B]/35 p-3 text-sm text-[#E8E1D8]/65">
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#8F1F23]" />
-                  {deliverable}
-                </div>
-              ))}
+              {item.deliverables.map((deliverable) => <div key={deliverable} className="flex items-start gap-3 rounded-2xl border border-[#E8E1D8]/[0.08] bg-[#0A0A0B]/35 p-3 text-sm text-[#E8E1D8]/65"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#8F1F23]" />{deliverable}</div>)}
             </div>
           </div>
           <div className="rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-6">
             <h2 className="text-2xl font-semibold tracking-[-0.04em]">Результат / применимость</h2>
             <p className="mt-5 text-base leading-7 text-[#E8E1D8]/66">{item.result}</p>
-            <div className="mt-5 rounded-2xl border border-[#8F1F23]/25 bg-[#8F1F23]/10 p-4 text-sm leading-6 text-[#E8E1D8]/72">
-              <strong className="text-[#E8E1D8]">Где применимо:</strong> {item.applicability}
-            </div>
+            <div className="mt-5 rounded-2xl border border-[#8F1F23]/25 bg-[#8F1F23]/10 p-4 text-sm leading-6 text-[#E8E1D8]/72"><strong className="text-[#E8E1D8]">Где применимо:</strong> {item.applicability}</div>
           </div>
         </div>
       </section>
-
       <section className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12">
-        <SectionTitle compact eyebrow="материалы кейса" title="Фото и видео" text="Здесь собраны основные материалы проекта: ролик, кадры, фрагменты события и визуальные примеры результата." />
+        <SectionTitle compact eyebrow="материалы кейса" title="Фото и видео" text="Основные материалы проекта: ролик, кадры, фрагменты события и визуальные примеры результата." />
         <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
           <VideoBlock item={item} />
           <div className="grid grid-cols-2 gap-3">
-            {item.gallery.slice(0, 6).map((src, index) => (
-              <MediaPlaceholder key={src} src={src} label={`кадр ${String(index + 1).padStart(2, "0")}`} className="aspect-square rounded-[1.25rem]" />
-            ))}
+            {item.gallery.slice(0, 6).map((src, index) => <MediaPlaceholder key={src} src={src} label={`кадр ${String(index + 1).padStart(2, "0")}`} className="aspect-square rounded-[1.25rem]" />)}
           </div>
         </div>
       </section>
-
       <ProjectStartBlock navigate={navigate} />
     </main>
   );
@@ -1149,56 +1174,6 @@ function DetailBlock({ title, text }) {
   );
 }
 
-function TeamContactRow({ email, phone, telegram }) {
-  const cleanPhone = phone.replace(/[^0-9+]/g, "");
-  const linkClass = "grid h-12 w-full min-w-0 grid-cols-[18px_58px_minmax(0,1fr)] items-center gap-2 overflow-hidden rounded-2xl border border-[#E8E1D8]/10 bg-[#0A0A0B]/35 px-3 text-sm text-[#E8E1D8]/72 transition hover:border-[#E8E1D8]/25 hover:text-[#E8E1D8]";
-  const labelClass = "min-w-0 text-[10px] uppercase tracking-[0.08em] text-[#E8E1D8]/38";
-  const valueClass = "block min-w-0 truncate text-left text-xs text-[#E8E1D8]/72";
-
-  return (
-    <div className="mt-auto grid gap-3 pt-5">
-      <a href={`mailto:${email}`} title={email} aria-label={`Написать на почту ${email}`} className={linkClass}>
-        <Mail className="h-4 w-4 shrink-0" />
-        <span className={labelClass}>Почта</span>
-        <span className={valueClass}>{email}</span>
-      </a>
-      <a href={`tel:${cleanPhone}`} title={phone} aria-label={`Позвонить ${phone}`} className={linkClass}>
-        <Phone className="h-4 w-4 shrink-0" />
-        <span className={labelClass}>Тел.</span>
-        <span className={valueClass}>{phone}</span>
-      </a>
-      <a href={telegram} target="_blank" rel="noreferrer" title="Telegram" aria-label="Открыть Telegram" className={linkClass}>
-        <TelegramIcon className="h-5 w-5 shrink-0" />
-        <span className={labelClass}>ТГ</span>
-        <span className={valueClass}>Открыть профиль</span>
-      </a>
-    </div>
-  );
-}
-
-function TeamPage() {
-  return (
-    <main className="mx-auto max-w-7xl px-4 py-14 md:px-6 md:py-20">
-      <SectionTitle eyebrow="команда" title="Команда Missing Frame" text="У каждого направления есть своя зона ответственности: управление, техника, коммерция и креатив. Это помогает держать проект собранным, не терять сроки и сохранять единый уровень качества." />
-      <div className="grid items-stretch gap-5 md:grid-cols-2 xl:grid-cols-4">
-        {TEAM_MEMBERS.map((member, index) => (
-          <div key={member.id} className="group flex h-full min-w-0 flex-col overflow-hidden rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-5">
-            <TeamPhoto src={member.photo} alt={member.name} index={index} />
-            <div className="mb-2 min-h-10 text-xs uppercase tracking-[0.18em] text-[#8F1F23]">{member.role}</div>
-            <h2 className="min-h-16 text-2xl font-semibold tracking-[-0.04em]">{member.name}</h2>
-            <p className="mb-5 min-h-32 text-sm leading-6 text-[#E8E1D8]/60">{member.description}</p>
-            <TeamContactRow email={member.email} phone={member.phone} telegram={member.telegram} />
-          </div>
-        ))}
-      </div>
-      <div className="mt-8 rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-6 md:p-8">
-        <h2 className="text-3xl font-semibold tracking-[-0.04em]">Команда работает как единая production-система</h2>
-        <p className="mt-4 max-w-3xl text-sm leading-7 text-[#E8E1D8]/62">Мы заранее разделяем роли внутри проекта: кто отвечает за креатив, технику, коммуникацию и финальную выдачу. Такой подход снижает хаос на площадке и делает работу прозрачной для клиента.</p>
-      </div>
-    </main>
-  );
-}
-
 function ProcessPage() {
   return (
     <main className="mx-auto max-w-7xl px-4 py-14 md:px-6 md:py-20">
@@ -1215,11 +1190,7 @@ function ProcessPage() {
       <div className="mt-4 rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-6 md:p-8">
         <h2 className="text-3xl font-semibold tracking-[-0.04em]">Документы и операционные инструменты</h2>
         <div className="mt-6 grid gap-3 md:grid-cols-3">
-          {PROCESS_TOOLS.map((item) => (
-            <div key={item} className="rounded-2xl border border-[#E8E1D8]/[0.08] bg-[#0A0A0B]/35 p-4 text-sm text-[#E8E1D8]/65">
-              {item}
-            </div>
-          ))}
+          {PROCESS_TOOLS.map((item) => <div key={item} className="rounded-2xl border border-[#E8E1D8]/[0.08] bg-[#0A0A0B]/35 p-4 text-sm text-[#E8E1D8]/65">{item}</div>)}
         </div>
       </div>
     </main>
@@ -1254,10 +1225,11 @@ function ContactPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+
       if (!response.ok) throw new Error("request_failed");
       setSent(true);
       form.reset();
-    } catch (submitError) {
+    } catch {
       setError("Не удалось отправить заявку. Напишите напрямую на partner@missingframe.ru.");
     } finally {
       setSending(false);
@@ -1272,9 +1244,7 @@ function ContactPage() {
           <h1 className="text-4xl font-semibold tracking-[-0.055em] md:text-7xl">Запустить проект или обсудить пакет за 15–20 минут.</h1>
           <p className="mt-6 text-lg leading-8 text-[#E8E1D8]/66">Основной контакт: Екатерина / Missing Frame production.</p>
           <div className="mt-8 grid gap-3">
-            <a href="mailto:partner@missingframe.ru" className="inline-flex w-fit items-center gap-2 rounded-full border border-[#E8E1D8]/15 px-5 py-3 text-[#E8E1D8]/75 hover:border-[#E8E1D8]/35">
-              <Mail className="h-4 w-4" /> partner@missingframe.ru
-            </a>
+            <a href="mailto:partner@missingframe.ru" className="inline-flex w-fit items-center gap-2 rounded-full border border-[#E8E1D8]/15 px-5 py-3 text-[#E8E1D8]/75 hover:border-[#E8E1D8]/35"><Mail className="h-4 w-4" /> partner@missingframe.ru</a>
           </div>
         </div>
         <form onSubmit={handleSubmit} className="rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-5 md:p-8">
@@ -1325,12 +1295,8 @@ function ProjectStartBlock({ navigate }) {
             <p className="mt-5 max-w-2xl text-base leading-7 text-[#E8E1D8]/62">Опишите проект, сроки и нужные материалы — предложим рабочий формат съёмки и выдачи.</p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
-            <button type="button" onClick={() => navigate(ROUTES.contact)} className="inline-flex items-center justify-center gap-2 rounded-full bg-[#E8E1D8] px-5 py-3 font-semibold text-[#0A0A0B]">
-              Создать свой проект <ArrowRight className="h-4 w-4" />
-            </button>
-            <button type="button" onClick={() => navigate(ROUTES.services)} className="inline-flex items-center justify-center gap-2 rounded-full border border-[#E8E1D8]/16 px-5 py-3 font-semibold text-[#E8E1D8]">
-              Весь спектр услуг <ArrowUpRight className="h-4 w-4" />
-            </button>
+            <button type="button" onClick={() => navigate(ROUTES.contact)} className="inline-flex items-center justify-center gap-2 rounded-full bg-[#E8E1D8] px-5 py-3 font-semibold text-[#0A0A0B]">Создать свой проект <ArrowRight className="h-4 w-4" /></button>
+            <button type="button" onClick={() => navigate(ROUTES.services)} className="inline-flex items-center justify-center gap-2 rounded-full border border-[#E8E1D8]/16 px-5 py-3 font-semibold text-[#E8E1D8]">Весь спектр услуг <ArrowUpRight className="h-4 w-4" /></button>
           </div>
         </div>
       </div>
@@ -1372,7 +1338,6 @@ export default function App() {
     if (route === ROUTES.home) return <HomePage navigate={navigate} />;
     if (route === ROUTES.services) return <ServicesPage navigate={navigate} />;
     if (route === ROUTES.cases) return <CasesPage navigate={navigate} />;
-    if (route === ROUTES.team) return <TeamPage />;
     if (route === ROUTES.process) return <ProcessPage />;
     if (route === ROUTES.contact) return <ContactPage />;
 

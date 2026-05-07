@@ -8,6 +8,7 @@ function escapeHtml(value = "") {
 
 function getChatIds() {
   const raw = process.env.TELEGRAM_CHAT_IDS || process.env.TELEGRAM_CHAT_ID || "";
+
   return raw
     .split(",")
     .map((id) => id.trim())
@@ -52,26 +53,20 @@ export default async function handler(req, res) {
   const chatIds = getChatIds();
 
   if (!token || chatIds.length === 0) {
-    return res.status(500).json({
-      ok: false,
-      error: "Telegram env variables are not configured",
-    });
+    return res.status(500).json({ ok: false, error: "Telegram env variables are not configured" });
   }
 
   let body = req.body;
+
   if (typeof body === "string") {
-    try {
-      body = JSON.parse(body);
-    } catch {
-      return res.status(400).json({ ok: false, error: "Invalid JSON" });
-    }
+    body = JSON.parse(body);
   }
 
-  const projectName = escapeHtml(body?.projectName);
-  const description = escapeHtml(body?.description);
-  const email = escapeHtml(body?.email);
-  const contact = escapeHtml(body?.contact);
-  const page = escapeHtml(body?.page);
+  const projectName = escapeHtml(body.projectName);
+  const description = escapeHtml(body.description);
+  const email = escapeHtml(body.email);
+  const contact = escapeHtml(body.contact);
+  const page = escapeHtml(body.page);
 
   if (!projectName || !description || !email) {
     return res.status(400).json({ ok: false, error: "Required fields are missing" });

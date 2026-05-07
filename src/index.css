@@ -7,10 +7,13 @@ html {
 
 body {
   margin: 0;
-  min-width: 320px;
   background: #0A0A0B;
 }
 
 * {
   box-sizing: border-box;
+}
+
+button, a, input, textarea {
+  -webkit-tap-highlight-color: transparent;
 }
