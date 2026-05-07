@@ -105,7 +105,7 @@ const cases = [
 const team = [
   {
     id: "lead",
-    role: "Главный руководитель",
+    role: "Руководитель направлений",
     name: "Антон Гиззатов",
     description: "Основатель и продюсер Missing Frame. Отвечает за стратегию, проектное управление и производственную систему продакшена; в опыте — 200+ мероприятий, команды до 80 специалистов и проекты с бюджетами до 20 млн рублей.",
     email: "lead@missingframe.ru",
@@ -321,6 +321,27 @@ function ImageFrame({ src, label = "", className = "", children }) {
   </div>;
 }
 
+function HeroVideo() {
+  const [failed, setFailed] = useState(false);
+
+  return <div className="relative aspect-[4/5] overflow-hidden rounded-[1.6rem] border border-[#E8E1D8]/10 bg-[#111]">
+    {!failed ? <video
+      className="absolute inset-0 h-full w-full object-cover opacity-80"
+      poster="/assets/hero/mf-backstage-poster.webp"
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      onError={() => setFailed(true)}
+    >
+      <source src="/assets/hero/mf-backstage-loop.webm" type="video/webm" />
+      <source src="/assets/hero/mf-backstage-loop.mp4" type="video/mp4" />
+    </video> : <ImageFrame className="absolute inset-0 h-full w-full rounded-none border-0" src="/assets/hero/mf-backstage-poster.webp" />}
+    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,11,0.05),rgba(10,10,11,0.66)),radial-gradient(circle_at_22%_16%,rgba(143,31,35,0.35),transparent_30%)]" />
+  </div>;
+}
+
 function VideoFrame({ src, title = "Основное видео" }) {
   const [failed, setFailed] = useState(false);
   return <div className="overflow-hidden rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-3">
@@ -346,12 +367,12 @@ function Hero({ navigate }) {
       <p className="mt-6 max-w-xl text-lg leading-8 text-[#E8E1D8]/66 md:text-xl">Продакшен для событий, брендов, клипов, шоу и вертикального контента.</p>
       <button type="button" onClick={() => navigate(routes.contact)} className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#8F1F23] px-5 py-3 font-semibold">Создать проект <ArrowRight /></button>
     </motion.div>
-    <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} className="relative overflow-hidden rounded-[2rem] border border-[#E8E1D8]/12 bg-[#E8E1D8]/5 p-3"><ImageFrame label="закулисный фон" className="aspect-[4/5]" src="/assets/hero/mf-backstage-poster.webp"/><div className="absolute bottom-8 left-8 right-8 rounded-2xl border border-[#E8E1D8]/12 bg-[#0A0A0B]/65 p-4 backdrop-blur-md"><Eyebrow>ключевые факты</Eyebrow><div className="grid grid-cols-3 gap-2 text-center"><Metric value="40+" label="событий"/><Metric value="700" label="участников"/><Metric value="6+2" label="команда"/></div></div></motion.div>
+    <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} className="relative overflow-hidden rounded-[2rem] border border-[#E8E1D8]/12 bg-[#E8E1D8]/5 p-3"><HeroVideo/><div className="absolute bottom-4 left-4 right-4 rounded-2xl border border-[#E8E1D8]/12 bg-[#0A0A0B]/65 p-3 backdrop-blur-md sm:bottom-8 sm:left-8 sm:right-8 sm:p-4"><div className="mb-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8F1F23] sm:text-xs sm:tracking-[0.25em]">ключевые факты</div><div className="grid grid-cols-3 gap-1 text-center sm:gap-2"><Metric value="40+" label="событий"/><Metric value="700" label="участников"/><Metric value="6+2" label="команда"/></div></div></motion.div>
   </div></section>;
 }
 
 function Metric({ value, label }) {
-  return <div className="rounded-2xl border border-[#E8E1D8]/10 bg-[#E8E1D8]/5 p-3"><div className="text-2xl font-semibold leading-[1.15]">{value}</div><div className="mt-1 text-[10px] uppercase tracking-[0.18em] text-[#E8E1D8]/45">{label}</div></div>;
+  return <div className="min-w-0 rounded-xl border border-[#E8E1D8]/10 bg-[#E8E1D8]/5 p-2 sm:rounded-2xl sm:p-3"><div className="text-lg font-semibold leading-[1.1] sm:text-2xl sm:leading-[1.15]">{value}</div><div className="mt-1 truncate text-[8px] uppercase tracking-[0.08em] text-[#E8E1D8]/45 sm:text-[10px] sm:tracking-[0.18em]">{label}</div></div>;
 }
 
 function PartnersStrip() {
@@ -377,7 +398,7 @@ function CasesCarousel({ navigate }) {
 
   return <section className="mx-auto max-w-7xl select-none overflow-hidden px-4 py-10 md:px-6 md:py-14"><div className="mb-7 flex flex-col gap-4 md:flex-row md:items-end md:justify-between"><div><Eyebrow>кейсы</Eyebrow><div className="mb-3 flex items-center gap-3 text-sm text-[#E8E1D8]/50"><span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1">{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span><span>{active.short}</span></div><h2 className="text-3xl font-semibold leading-[1.14] tracking-[-0.025em] md:text-5xl md:leading-[1.12]">Избранные кейсы</h2><p className="mt-3 max-w-xl text-sm leading-6 text-[#E8E1D8]/58">Короткая витрина проектов. Подробности открываются отдельно.</p></div><button type="button" onClick={() => navigate(routes.cases)} className="w-fit rounded-full border border-[#E8E1D8]/15 px-4 py-2 text-sm transition hover:border-[#8F1F23]/60 hover:bg-[#340F12]/55">Все кейсы ↗</button></div>
     <div className="md:hidden"><SurfaceCard className="overflow-hidden p-3"><ImageFrame className="aspect-[5/6]" src={active.loop || active.cover}/><div className="p-4"><div className="mb-3 flex items-center justify-between gap-3"><span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1 text-xs text-[#E8E1D8]/60">{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span><span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-[#E8E1D8]/55">{active.type}</span></div><h3 className="text-3xl font-semibold leading-[1.12] tracking-[-0.025em]">{active.title}</h3><p className="mt-4 text-sm leading-6 text-[#E8E1D8]/62">{active.lead}</p></div></SurfaceCard></div>
-    <div className="relative mx-auto hidden h-[520px] max-w-6xl md:block"><div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-44 bg-gradient-to-r from-[#0A0A0B] to-transparent"/><div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-44 bg-gradient-to-l from-[#0A0A0B] to-transparent"/>{cases.map((item, i) => { const off = offsetFor(i); const abs = Math.abs(off); const is = off === 0; return <motion.div key={item.id} className="absolute left-1/2 top-0 flex h-full w-[72%] max-w-[560px] -translate-x-1/2 flex-col overflow-hidden rounded-[2.2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-3 shadow-2xl transition duration-300 hover:border-[#8F1F23]/45 hover:bg-[#340F12]/45" animate={{ x: off * 205, scale: is ? 0.92 : abs === 1 ? 0.76 : 0.62, opacity: is ? 1 : abs === 1 ? 0.34 : abs === 2 ? 0.08 : 0, filter: is ? "blur(0px)" : abs === 1 ? "blur(7px)" : "blur(15px)", zIndex: 20 - abs }} transition={{ type: "spring", stiffness: 120, damping: 22 }} style={{ pointerEvents: is ? "auto" : "none" }}><ImageFrame className="h-[54%] shrink-0" src={item.loop || item.cover}/><div className="absolute left-8 top-8 rounded-full border border-[#E8E1D8]/15 bg-[#0A0A0B]/65 px-3 py-1 text-xs backdrop-blur-md">{String(i + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</div><div className="relative z-10 flex flex-1 flex-col justify-end p-5 pt-4"><div className="mb-3 inline-flex w-fit rounded-full border border-[#E8E1D8]/15 bg-[#0A0A0B]/55 px-3 py-1 text-xs uppercase tracking-[0.2em]">{item.type}</div><h3 className="text-4xl font-semibold leading-[1.14] tracking-[-0.025em] [text-shadow:0_6px_24px_rgba(0,0,0,0.85)]">{item.title}</h3><p className="mt-3 text-sm leading-6 text-[#E8E1D8]/68">{item.lead}</p></div></motion.div>; })}</div>
+    <div className="relative mx-auto hidden h-[520px] max-w-6xl md:block"><div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-44 bg-gradient-to-r from-[#0A0A0B] to-transparent"/><div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-44 bg-gradient-to-l from-[#0A0A0B] to-transparent"/>{cases.map((item, i) => { const off = offsetFor(i); const abs = Math.abs(off); const is = off === 0; return <motion.div key={item.id} className="absolute left-1/2 top-0 flex h-full w-[72%] max-w-[560px] -translate-x-1/2 flex-col overflow-hidden rounded-[2.2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-3 shadow-2xl hover:border-[#8F1F23]/45 hover:bg-[#340F12]/45" animate={{ x: off * 205, scale: is ? 0.92 : abs === 1 ? 0.76 : 0.62, opacity: is ? 1 : abs === 1 ? 0.34 : abs === 2 ? 0.08 : 0, filter: is ? "blur(0px)" : abs === 1 ? "blur(7px)" : "blur(15px)", zIndex: 20 - abs }} transition={{ type: "spring", stiffness: 120, damping: 22 }} style={{ pointerEvents: is ? "auto" : "none" }}><ImageFrame className="h-[54%] shrink-0" src={item.loop || item.cover}/><div className="absolute left-8 top-8 rounded-full border border-[#E8E1D8]/15 bg-[#0A0A0B]/65 px-3 py-1 text-xs backdrop-blur-md">{String(i + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</div><div className="relative z-10 flex flex-1 flex-col justify-end p-5 pt-4"><div className="mb-3 inline-flex w-fit rounded-full border border-[#E8E1D8]/15 bg-[#0A0A0B]/55 px-3 py-1 text-xs uppercase tracking-[0.2em]">{item.type}</div><h3 className="text-4xl font-semibold leading-[1.14] tracking-[-0.025em] [text-shadow:0_6px_24px_rgba(0,0,0,0.85)]">{item.title}</h3><p className="mt-3 text-sm leading-6 text-[#E8E1D8]/68">{item.lead}</p></div></motion.div>; })}</div>
     <CarouselControls onPrev={prev} onNext={next}><button type="button" onClick={() => navigate(`/cases/${active.id}`)} className="rounded-full bg-[#E8E1D8] px-5 py-4 text-sm font-semibold text-[#0A0A0B]">Открыть кейс →</button></CarouselControls>
   </section>;
 }
