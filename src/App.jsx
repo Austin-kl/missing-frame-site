@@ -333,10 +333,9 @@ function VideoFrame({ src, title = "Основное видео" }) {
 }
 
 function ServiceSticker() {
-  return <div className="relative mb-6 flex h-14 w-14 items-center justify-center rounded-2xl border border-[#E8E1D8]/20 bg-[#E8E1D8] text-[#0A0A0B] shadow-[0_14px_35px_rgba(0,0,0,0.35)]">
-    <div className="absolute inset-1 rounded-[1rem] border border-[#0A0A0B]/10" />
+  return <div className="relative mb-6 flex h-14 w-16 items-center justify-center rounded-2xl border border-[#8F1F23]/55 bg-[#8F1F23]/35 text-[#E8E1D8] shadow-[0_14px_35px_rgba(0,0,0,0.35)] transition duration-300 group-hover:border-[#E8E1D8]/20 group-hover:bg-[#8F1F23]/55">
+    <div className="absolute inset-1 rounded-[1rem] border border-[#E8E1D8]/10" />
     <SparkIcon className="relative z-10 h-6 w-6" />
-    <div className="absolute -right-1 -top-1 h-3 w-3 rounded-full bg-[#8F1F23]" />
   </div>;
 }
 
@@ -410,12 +409,12 @@ function TeamCarousel() {
   return <section className="mx-auto max-w-7xl select-none overflow-hidden px-4 py-10 md:px-6 md:py-14"><div className="mb-7"><Eyebrow>команда</Eyebrow><div className="mb-3 flex gap-3 text-sm text-[#E8E1D8]/50"><span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1">{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span><span>{active.role}</span></div><h2 className="text-3xl font-semibold leading-[1.14] tracking-[-0.025em] md:text-5xl md:leading-[1.12]">Команда Missing Frame</h2><p className="mt-3 max-w-xl text-sm leading-6 text-[#E8E1D8]/58">Управление, техника, коммерция и креатив в одной системе.</p></div>
     <div className="md:hidden"><div className="mx-auto max-w-[350px]"><TeamCard member={active} index={index}/></div></div>
     <div className="relative mx-auto hidden h-[700px] max-w-6xl md:block"><div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-44 bg-gradient-to-r from-[#0A0A0B] to-transparent"/><div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-44 bg-gradient-to-l from-[#0A0A0B] to-transparent"/>{team.map((member, i) => { const off = offsetFor(i); const abs = Math.abs(off); const is = off === 0; return <motion.div key={member.id} className="absolute left-1/2 top-0 h-full w-[72%] max-w-[400px] -translate-x-1/2" animate={{ x: off * 205, scale: is ? 0.92 : abs === 1 ? 0.76 : 0.62, opacity: is ? 1 : abs === 1 ? 0.34 : abs === 2 ? 0.08 : 0, filter: is ? "blur(0px)" : abs === 1 ? "blur(7px)" : "blur(15px)", zIndex: 20 - abs }} transition={{ type: "spring", stiffness: 120, damping: 22 }} style={{ pointerEvents: is ? "auto" : "none" }}><TeamCard member={member} index={i}/></motion.div>; })}</div>
-    <CarouselControls onPrev={prev} onNext={next}><div className="rounded-full border border-[#E8E1D8]/12 px-5 py-4 text-sm text-[#E8E1D8]/70">{active.name}</div></CarouselControls>
+    <CarouselControls onPrev={prev} onNext={next}><div className="flex h-12 w-[170px] items-center justify-center truncate rounded-full border border-[#E8E1D8]/12 px-4 text-center text-sm text-[#E8E1D8]/70 sm:w-[260px]">{active.name}</div></CarouselControls>
   </section>;
 }
 
 function ServicesGrid({ compact = false }) {
-  return <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">{services.map((service) => <SurfaceCard key={service.title} className="p-6"><ServiceSticker/><h3 className="text-2xl font-semibold leading-[1.18] tracking-[-0.02em]">{service.title}</h3><p className="mt-4 text-sm leading-6 text-[#E8E1D8]/62">{compact ? "Подбираем формат под задачу, площадку, сроки и нужные материалы." : service.text}</p></SurfaceCard>)}</div>;
+  return <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">{services.map((service) => <SurfaceCard key={service.title} className="group p-6"><ServiceSticker/><h3 className="text-2xl font-semibold leading-[1.18] tracking-[-0.02em]">{service.title}</h3><p className="mt-4 text-sm leading-6 text-[#E8E1D8]/62">{compact ? "Подбираем формат под задачу, площадку, сроки и нужные материалы." : service.text}</p></SurfaceCard>)}</div>;
 }
 
 function ServicesTeaser({ navigate }) {
@@ -478,7 +477,7 @@ function ContactPage() {
     }
   };
 
-  return <main className="mx-auto max-w-7xl px-4 py-14 md:px-6 md:py-20"><div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]"><div><Eyebrow>контакты</Eyebrow><h1 className="text-4xl font-semibold leading-[1.12] tracking-[-0.025em] md:text-7xl md:leading-[1.08]">Запустить проект или обсудить пакет за 15–20 минут</h1><p className="mt-6 text-lg leading-8 text-[#E8E1D8]/66">Основной контакт: Екатерина / Missing Frame production.</p><a href="mailto:partner@missingframe.ru" className="mt-8 inline-flex rounded-full border border-[#E8E1D8]/15 px-5 py-3 text-[#E8E1D8]/75 transition hover:border-[#8F1F23]/60 hover:bg-[#340F12]/55">partner@missingframe.ru</a></div><form onSubmit={handleSubmit} className="rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-5 md:p-8"><div className="grid gap-4"><Input name="projectName" label="Название проекта" required/><Textarea name="description" label="Описание задачи" required/><Input name="email" label="Email" type="email" required/><Input name="contact" label="Telegram / VK / телефон"/><button disabled={sending} className="rounded-full bg-[#8F1F23] px-5 py-3 font-semibold transition hover:bg-[#a7282d] disabled:opacity-60">{sending ? "Отправляем..." : "Отправить заявку"}</button>{sent ? <div className="rounded-2xl border border-[#8F1F23]/35 bg-[#8F1F23]/12 p-4 text-sm">Спасибо. Заявка принята.</div> : null}{error ? <div className="rounded-2xl border border-[#E8E1D8]/15 bg-[#0A0A0B]/35 p-4 text-sm">{error}</div> : null}</div></form></div></main>;
+  return <main className="mx-auto max-w-7xl px-4 py-14 md:px-6 md:py-20"><div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]"><div><Eyebrow>контакты</Eyebrow><h1 className="text-4xl font-semibold leading-[1.12] tracking-[-0.025em] md:text-7xl md:leading-[1.08]">Запустить проект или обсудить пакет за 15 — 20 минут</h1><p className="mt-6 text-lg leading-8 text-[#E8E1D8]/66">Основной контакт: Екатерина / Missing Frame production.</p><a href="mailto:partner@missingframe.ru" className="mt-8 inline-flex rounded-full border border-[#E8E1D8]/15 px-5 py-3 text-[#E8E1D8]/75 transition hover:border-[#8F1F23]/60 hover:bg-[#340F12]/55">partner@missingframe.ru</a></div><form onSubmit={handleSubmit} className="rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-5 md:p-8"><div className="grid gap-4"><Input name="projectName" label="Название проекта" required/><Textarea name="description" label="Описание задачи" required/><Input name="email" label="Email" type="email" required/><Input name="contact" label="Telegram / VK / телефон"/><button disabled={sending} className="rounded-full bg-[#8F1F23] px-5 py-3 font-semibold transition hover:bg-[#a7282d] disabled:opacity-60">{sending ? "Отправляем..." : "Отправить заявку"}</button>{sent ? <div className="rounded-2xl border border-[#8F1F23]/35 bg-[#8F1F23]/12 p-4 text-sm">Спасибо. Заявка принята.</div> : null}{error ? <div className="rounded-2xl border border-[#E8E1D8]/15 bg-[#0A0A0B]/35 p-4 text-sm">{error}</div> : null}</div></form></div></main>;
 }
 
 function CaseDetailPage({ item, navigate }) {
