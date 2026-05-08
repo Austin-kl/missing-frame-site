@@ -1,15 +1,13 @@
 # Missing Frame Site
 
-React + Vite сайт Missing Frame. В архиве уже подготовлены страницы: главная, услуги, кейсы, процесс, контакты и серверная функция для отправки заявки в Telegram.
-
-## Запуск локально
+## Быстрый запуск
 
 ```bash
-npm install
+npm install --no-audit --no-fund --progress=false
 npm run dev
 ```
 
-## Сборка
+## Build
 
 ```bash
 npm run build
@@ -18,70 +16,157 @@ npm run preview
 
 ## Vercel
 
-Настройки проекта:
-
 - Framework Preset: `Vite`
+- Install Command: `npm install --no-audit --no-fund --progress=false`
 - Build Command: `npm run build`
 - Output Directory: `dist`
-- Install Command: оставить пустым или `npm install --no-audit --no-fund --progress=false`
-- Root Directory: корень репозитория, где лежит `package.json`
+- Root Directory: корень проекта
 
 ## Переменные окружения
 
 ```env
-TELEGRAM_BOT_TOKEN=your_bot_token
-TELEGRAM_CHAT_IDS=123456789,-1009876543210
 VITE_FORM_ENDPOINT=/api/contact
+TELEGRAM_BOT_TOKEN=...
+TELEGRAM_CHAT_IDS=123456789,-1001234567890
 ```
-
-## Почему раньше Vercel мог долго висеть на Installing dependencies
-
-В старых архивах `package-lock.json` был создан в среде с внутренним registry и содержал `resolved`-ссылки не на `registry.npmjs.org`. На Vercel такой lockfile может заставлять npm долго пытаться получить недоступные пакеты. В этой версии:
-
-- удалён проблемный `package-lock.json`;
-- добавлен `.npmrc` с публичным registry;
-- зависимости зафиксированы версиями, а не `latest`;
-- убран `framer-motion`, чтобы уменьшить число зависимостей.
-
-После первого успешного деплоя Vercel должен кэшировать зависимости. Если снова будет 7–8 минут, проверьте Project → Settings → Build & Development Settings → Install Command и убедитесь, что используется корень проекта.
 
 ## Структура медиафайлов
 
-| Блок | Директория | Файлы | Формат | Рекомендация |
-|---|---|---|---|---|
-| Hero showreel | `public/assets/hero/` | `mf-backstage-loop.webm`, `mf-backstage-loop.mp4`, `mf-backstage-poster.webp` | `.webm`, `.mp4`, `.webp` | Лучше 4:5 — `1080x1350` или `1440x1800`. Если загрузить 16:9, сайт обрежет края, потому что hero-блок вертикальный. |
-| Фото команды | `public/assets/team/` | `lead.png`, `tech.png`, `commercial.png`, `creative.png` | `.png` или `.webp` с прозрачностью | `1200x1600`, прозрачный фон, объект по центру. |
-| Обложка кейса | `public/assets/cases/<case>/` | `cover.webp` | `.webp` | `1600x1000` или `1920x1080`, до 900 КБ. |
-| Loop кейса | `public/assets/cases/<case>/` | `cover-loop.webp` | animated `.webp` | 2–5 секунд, до 1–2 МБ. Если файла нет, покажется `cover.webp`. |
-| Видео кейса | `public/assets/cases/<case>/` | `aftermovie.mp4`, `recap.mp4`, `showreel.mp4`, `fragment.mp4`, `teaser.mp4` | `.mp4`, H.264 | 1920×1080, 30–90 секунд, желательно до 20–40 МБ. |
-| Постер видео | `public/assets/cases/<case>/` | `video-poster.webp` | `.webp` | 1920×1080, до 500 КБ. |
-| Галерея кейса | `public/assets/cases/<case>/gallery/` | `01.webp` ... `06.webp` | `.webp` | 6 фото минимум. Можно расширить в коде до 12. |
-
-## Папки кейсов
+Все материалы кладутся в `public/assets`. На сайте они доступны без слова `public`: `/assets/...`.
 
 ```txt
-public/assets/cases/
-  glowbyte/
-  mediavypusknoy-2025/
-  sports-live-events/
-  production-system/
-  svvfit/
-  portal-13/
-  short-film-ai/
+public/
+  assets/
+    hero/
+      mf-backstage-loop.webm
+      mf-backstage-loop.mp4
+      mf-backstage-poster.webp
+
+    logo/
+      missing-frame-logo.svg
+      missing-frame-logo.png
+
+    team/
+      lead.png
+      tech.png
+      commercial.png
+      creative.png
+
+    cases/
+      glowbyte/
+        cover.webp
+        cover-loop.webp
+        cover-loop.webm
+        aftermovie.mp4
+        video-poster.webp
+        gallery/
+          01.webp
+          02.webp
+          03.webp
+          04.webp
+          05.webp
+          06.webp
+
+      mediavypusknoy-2025/
+        cover.webp
+        cover-loop.webp
+        cover-loop.webm
+        recap.mp4
+        video-poster.webp
+        gallery/
+          01.webp
+          02.webp
+          03.webp
+          04.webp
+          05.webp
+          06.webp
+
+      sports-live-events/
+        cover.webp
+        cover-loop.webp
+        cover-loop.webm
+        showreel.mp4
+        video-poster.webp
+        gallery/
+          01.webp
+          02.webp
+          03.webp
+          04.webp
+          05.webp
+          06.webp
+
+      production-system/
+        cover.webp
+        cover-loop.webp
+        cover-loop.webm
+        system-demo.mp4
+        video-poster.webp
+        gallery/
+          01.webp
+          02.webp
+          03.webp
+          04.webp
+          05.webp
+          06.webp
+
+      svvfit/
+        cover.webp
+        cover-loop.webp
+        cover-loop.webm
+        vertical-pack.mp4
+        video-poster.webp
+        gallery/
+          01.webp
+          02.webp
+          03.webp
+          04.webp
+          05.webp
+          06.webp
+
+      portal-13/
+        cover.webp
+        cover-loop.webp
+        cover-loop.webm
+        fragment.mp4
+        video-poster.webp
+        gallery/
+          01.webp
+          02.webp
+          03.webp
+          04.webp
+          05.webp
+          06.webp
+
+      short-film-ai/
+        cover.webp
+        cover-loop.webp
+        cover-loop.webm
+        teaser.mp4
+        video-poster.webp
+        gallery/
+          01.webp
+          02.webp
+          03.webp
+          04.webp
+          05.webp
+          06.webp
 ```
 
-В каждой папке кейса:
+## Логика обложек кейсов
 
-```txt
-cover.webp
-cover-loop.webp
-video-poster.webp
-<main-video>.mp4
-gallery/
-  01.webp
-  02.webp
-  03.webp
-  04.webp
-  05.webp
-  06.webp
-```
+Компонент автоматически проверяет наличие `cover-loop.webm` / `cover-loop.mp4` через HEAD-запрос.
+
+- Если видео loop есть — показывается видео.
+- Если видео loop нет — показывается `cover-loop.webp`.
+- Если `cover-loop.webp` не загрузился — используется `cover.webp`.
+- Если ничего нет — показывается нейтральный тёмный fallback без красной подсветки.
+
+## Почему hero-видео может обрезаться
+
+Hero-блок вертикальный, примерно 4:5. Лучше экспортировать видео так:
+
+- `1080×1350`
+- `1440×1800`
+- `2160×2700`
+
+Если положить горизонтальный файл `1920×1080`, он будет обрезаться через `object-cover`. Это нормальное поведение, чтобы видео полностью заполняло карточку.

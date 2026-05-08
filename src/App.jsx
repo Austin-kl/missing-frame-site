@@ -131,7 +131,9 @@ const cases = [
   return {
     ...item,
     cover: `/assets/cases/${folder}/cover.webp`,
-    loop: `/assets/cases/${folder}/cover-loop.webp`,
+    loopWebm: `/assets/cases/${folder}/cover-loop.webm`,
+    loopMp4: `/assets/cases/${folder}/cover-loop.mp4`,
+    loopWebp: `/assets/cases/${folder}/cover-loop.webp`,
     poster: `/assets/cases/${folder}/video-poster.webp`,
     gallery: Array.from({ length: 6 }, (_, index) => `/assets/cases/${folder}/gallery/${String(index + 1).padStart(2, "0")}.webp`),
   };
@@ -359,13 +361,93 @@ function Nav({ route, navigate }) {
   </header>;
 }
 
-function ImageFrame({ src, label = "", className = "", children, fit = "cover" }) {
-  const [failed, setFailed] = useState(false);
-  return <div className={cls("relative overflow-hidden rounded-[1.6rem] border border-[#E8E1D8]/10 bg-[#111]", className)}>
-    {src && !failed ? <img src={src} alt={label || "media"} onError={() => setFailed(true)} className={cls("absolute inset-0 h-full w-full opacity-80", fit === "contain" ? "object-contain object-center" : "object-cover")} /> : null}
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(143,31,35,0.48),transparent_32%),linear-gradient(135deg,rgba(232,225,216,0.12),rgba(52,15,18,0.42)_48%,rgba(10,10,11,1))]" />
+function MediaFallback({ children }) {
+  return <>
+    <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(232,225,216,0.08),rgba(10,10,11,1)_48%,rgba(10,10,11,1))]" />
+    {children}
+  </>;
+}
+
+function ImageFrame({ src, webm, mp4, poster, label = "", className = "", children, fit = "cover", video = false }) {
+  const [mode, setMode] = useState(video && (webm || mp4) ? "checking" : "image");
+  const [imageFailed, setImageFailed] = useState(false);
+  const imageSrc = src || poster;
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function chooseMode() {
+      if (!video || (!webm && !mp4)) {
+        if (!cancelled) setMode("image");
+        return;
+      }
+
+      const sources = [webm, mp4].filter(Boolean);
+
+      for (const source of sources) {
+        try {
+          const response = await fetch(source, { method: "HEAD" });
+          if (response.ok) {
+            if (!cancelled) setMode("video");
+            return;
+          }
+        } catch (error) {
+          // Fallback to image below.
+        }
+      }
+
+      if (!cancelled) setMode("image");
+    }
+
+    chooseMode();
+    return () => {
+      cancelled = true;
+    };
+  }, [video, webm, mp4]);
+
+  const canShowVideo = mode === "video" && (webm || mp4);
+  const canShowImage = imageSrc && !imageFailed;
+
+  return <div className={cls("relative overflow-hidden rounded-[1.6rem] border border-[#E8E1D8]/10 bg-[#0A0A0B]", className)}>
+    {canShowVideo ? <video
+      className={cls("absolute inset-0 h-full w-full opacity-85", fit === "contain" ? "object-contain object-center" : "object-cover")}
+      poster={poster || src}
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      onError={() => setMode("image")}
+    >
+      {webm ? <source src={webm} type="video/webm" /> : null}
+      {mp4 ? <source src={mp4} type="video/mp4" /> : null}
+    </video> : null}
+
+    {!canShowVideo && canShowImage ? <img
+      src={imageSrc}
+      alt={label || "media"}
+      onError={() => setImageFailed(true)}
+      className={cls("absolute inset-0 h-full w-full opacity-90", fit === "contain" ? "object-contain object-center" : "object-cover")}
+    /> : null}
+
+    {!canShowVideo && !canShowImage ? <MediaFallback /> : null}
+    <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,11,0.03),rgba(10,10,11,0.18))]" />
     {children}
   </div>;
+}
+
+function CaseCoverFrame({ item, className = "", children }) {
+  return <ImageFrame
+    webm={item.loopWebm}
+    mp4={item.loopMp4}
+    src={item.loopWebp || item.cover}
+    poster={item.cover}
+    label={item.short}
+    className={className}
+    video
+  >
+    {children}
+  </ImageFrame>;
 }
 
 function HeroVideo() {
@@ -393,7 +475,7 @@ function VideoFrame({ src, title = "Основное видео" }) {
   const [failed, setFailed] = useState(false);
   return <div className="overflow-hidden rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-3">
     <div className="relative aspect-video overflow-hidden rounded-[1.5rem] border border-[#E8E1D8]/10 bg-[#0A0A0B]">
-      {src && !failed ? <video controls onError={() => setFailed(true)} className="absolute inset-0 h-full w-full object-cover"><source src={src} type="video/mp4" /></video> : <div className="absolute inset-0 bg-[radial-gradient(circle_at_40%_20%,rgba(143,31,35,0.36),transparent_32%),linear-gradient(135deg,rgba(232,225,216,0.08),rgba(10,10,11,1))]" />}
+      {src && !failed ? <video controls onError={() => setFailed(true)} className="absolute inset-0 h-full w-full object-cover"><source src={src} type="video/mp4" /></video> : <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(232,225,216,0.08),rgba(10,10,11,1)_48%,rgba(10,10,11,1))]" />}
       <div className="absolute left-5 top-5 rounded-full border border-[#E8E1D8]/15 bg-[#0A0A0B]/65 px-3 py-1 text-xs uppercase tracking-[0.2em] text-[#E8E1D8]/60 backdrop-blur-md">{title}</div>
       {!src || failed ? <div className="absolute inset-0 flex items-center justify-center"><div className="flex h-16 w-16 items-center justify-center rounded-full border border-[#E8E1D8]/15 bg-[#E8E1D8]/10 text-[#E8E1D8]">▶</div></div> : null}
     </div>
@@ -463,8 +545,8 @@ function CasesCarousel({ navigate }) {
   };
 
   return <section className="mx-auto max-w-7xl select-none overflow-hidden px-4 py-10 md:px-6 md:py-14"><div className="mb-7 flex flex-col gap-4 md:flex-row md:items-end md:justify-between"><div><Eyebrow>кейсы</Eyebrow><div className="mb-3 flex items-center gap-3 text-sm text-[#E8E1D8]/50"><span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1">{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span><span>{active.short}</span></div><h2 className="text-3xl font-semibold leading-[1.14] tracking-[-0.025em] md:text-5xl md:leading-[1.12]">Избранные кейсы</h2><p className="mt-3 max-w-2xl text-sm leading-6 text-[#E8E1D8]/58">Проекты в event, sport, brand и creative production: задача, масштаб, команда, формат материалов и результат.</p></div><button type="button" onClick={() => navigate(routes.cases)} className="w-fit rounded-full border border-[#E8E1D8]/15 px-4 py-2 text-sm transition hover:border-[#8F1F23]/60 hover:bg-[#340F12]/55">Все кейсы ↗</button></div>
-    <div className="md:hidden"><div className="overflow-hidden rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-3"><ImageFrame src={active.loop || active.cover} className="aspect-[5/6]"/><div className="p-4"><div className="mb-3 flex items-center justify-between gap-3"><span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1 text-xs text-[#E8E1D8]/60">{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span><span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-[#E8E1D8]/55">{active.category}</span></div><h3 className="text-3xl font-semibold leading-[1.08] tracking-[-0.025em]">{active.fullTitle}</h3><p className="mt-4 text-sm leading-6 text-[#E8E1D8]/62">{active.lead}</p></div></div></div>
-    <div className="relative mx-auto hidden h-[500px] max-w-6xl md:block"><div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-44 bg-gradient-to-r from-[#0A0A0B] to-transparent"/><div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-44 bg-gradient-to-l from-[#0A0A0B] to-transparent"/>{cases.map((item, i) => { const off = offsetFor(i); const abs = Math.abs(off); const is = off === 0; return <div key={item.id} className="absolute top-0 flex h-full w-[72%] max-w-[560px] flex-col overflow-hidden rounded-[2.2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-3 shadow-2xl transition-[transform,opacity,filter,background-color,border-color] duration-300 ease-out hover:border-[#8F1F23]/45 hover:bg-[#340F12]/45" style={{ left: "50%", transform: `translate(-50%, 0) translateX(${off * 205}px) scale(${is ? 0.92 : abs === 1 ? 0.76 : 0.62})`, opacity: is ? 1 : abs === 1 ? 0.42 : abs === 2 ? 0.14 : 0, filter: is ? "blur(0px)" : abs === 1 ? "blur(5px)" : "blur(12px)", zIndex: 20 - abs, pointerEvents: "none" }}><ImageFrame src={item.loop || item.cover} className="h-[54%] shrink-0"/><div className="absolute left-8 top-8 rounded-full border border-[#E8E1D8]/15 bg-[#0A0A0B]/55 px-3 py-1 text-xs">{String(i + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</div><div className="flex flex-1 flex-col justify-end p-5 pt-4"><div className="mb-3 inline-flex w-fit rounded-full border border-[#E8E1D8]/15 bg-[#0A0A0B]/55 px-3 py-1 text-xs uppercase tracking-[0.18em]">{item.category}</div><h3 className="text-4xl font-semibold leading-[1.12] tracking-[-0.025em]">{item.fullTitle}</h3><p className="mt-3 text-sm leading-6 text-[#E8E1D8]/65">{item.lead}</p></div></div>; })}</div>
+    <div className="md:hidden"><div className="overflow-hidden rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-3"><CaseCoverFrame item={active} className="aspect-[5/6]"/><div className="p-4"><div className="mb-3 flex items-center justify-between gap-3"><span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1 text-xs text-[#E8E1D8]/60">{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span><span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-[#E8E1D8]/55">{active.category}</span></div><h3 className="text-3xl font-semibold leading-[1.08] tracking-[-0.025em]">{active.fullTitle}</h3><p className="mt-4 text-sm leading-6 text-[#E8E1D8]/62">{active.lead}</p></div></div></div>
+    <div className="relative mx-auto hidden h-[500px] max-w-6xl md:block"><div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-44 bg-gradient-to-r from-[#0A0A0B] to-transparent"/><div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-44 bg-gradient-to-l from-[#0A0A0B] to-transparent"/>{cases.map((item, i) => { const off = offsetFor(i); const abs = Math.abs(off); const is = off === 0; return <div key={item.id} className="absolute top-0 flex h-full w-[72%] max-w-[560px] flex-col overflow-hidden rounded-[2.2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-3 shadow-2xl transition-[transform,opacity,filter,background-color,border-color] duration-300 ease-out hover:border-[#8F1F23]/45 hover:bg-[#340F12]/45" style={{ left: "50%", transform: `translate(-50%, 0) translateX(${off * 205}px) scale(${is ? 0.92 : abs === 1 ? 0.76 : 0.62})`, opacity: is ? 1 : abs === 1 ? 0.42 : abs === 2 ? 0.14 : 0, filter: is ? "blur(0px)" : abs === 1 ? "blur(5px)" : "blur(12px)", zIndex: 20 - abs, pointerEvents: "none" }}><CaseCoverFrame item={item} className="h-[54%] shrink-0"/><div className="absolute left-8 top-8 rounded-full border border-[#E8E1D8]/15 bg-[#0A0A0B]/55 px-3 py-1 text-xs">{String(i + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</div><div className="flex flex-1 flex-col justify-end p-5 pt-4"><div className="mb-3 inline-flex w-fit rounded-full border border-[#E8E1D8]/15 bg-[#0A0A0B]/55 px-3 py-1 text-xs uppercase tracking-[0.18em]">{item.category}</div><h3 className="text-4xl font-semibold leading-[1.12] tracking-[-0.025em]">{item.fullTitle}</h3><p className="mt-3 text-sm leading-6 text-[#E8E1D8]/65">{item.lead}</p></div></div>; })}</div>
     <div className="mt-6 flex items-center justify-center gap-3"><button type="button" onClick={prev} className="flex h-14 w-14 items-center justify-center rounded-full border border-[#E8E1D8]/15 transition hover:border-[#8F1F23]/60 hover:bg-[#340F12]/55"><ChevronLeft className="h-5 w-5"/></button><button type="button" onClick={() => navigate(`/cases/${active.id}`)} className="rounded-full bg-[#E8E1D8] px-5 py-4 text-sm font-semibold text-[#0A0A0B]">Открыть кейс →</button><button type="button" onClick={next} className="flex h-14 w-14 items-center justify-center rounded-full border border-[#E8E1D8]/15 transition hover:border-[#8F1F23]/60 hover:bg-[#340F12]/55"><ChevronRight className="h-5 w-5"/></button></div>
   </section>;
 }
@@ -578,7 +660,7 @@ function ContactPage() {
 function CaseDetailPage({ item, navigate }) {
   if (!item) return <NotFound navigate={navigate}/>;
   const related = cases.filter((current) => current.id !== item.id).slice(0, 3);
-  return <main><section className="mx-auto max-w-7xl px-4 py-10 md:px-6 md:py-16"><button type="button" onClick={() => navigate(routes.cases)} className="mb-8 rounded-full border border-[#E8E1D8]/12 px-4 py-2 text-sm transition hover:border-[#8F1F23]/60 hover:bg-[#340F12]/55">← Все кейсы</button><div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]"><div><Eyebrow>{item.category}</Eyebrow><h1 className="text-4xl font-semibold leading-[1.12] tracking-[-0.025em] md:text-7xl md:leading-[1.08]">{item.fullTitle}</h1><p className="mt-6 text-lg leading-8 text-[#E8E1D8]/66">{item.lead}</p><div className="mt-6 grid gap-3 sm:grid-cols-2">{item.facts.map((fact) => <div key={fact} className="rounded-2xl border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-4 text-sm leading-6 text-[#E8E1D8]/62">{fact}</div>)}</div></div><ImageFrame className="aspect-[16/10]" src={item.loop || item.cover}/></div></section><section className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12"><div className="grid gap-4 lg:grid-cols-3"><SurfaceCard className="p-5"><h2 className="text-2xl font-semibold leading-[1.18]">Задача</h2><p className="mt-3 text-sm leading-7 text-[#E8E1D8]/62">{item.task}</p></SurfaceCard><SurfaceCard className="p-5"><h2 className="text-2xl font-semibold leading-[1.18]">Решение</h2><p className="mt-3 text-sm leading-7 text-[#E8E1D8]/62">{item.solution}</p></SurfaceCard><SurfaceCard className="p-5"><h2 className="text-2xl font-semibold leading-[1.18]">Результат</h2><p className="mt-3 text-sm leading-7 text-[#E8E1D8]/62">{item.result}</p></SurfaceCard></div></section><section className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12"><SectionTitle eyebrow="материалы" title="Основное видео" text="Главный ролик или showreel-фрагмент кейса."/><VideoFrame src={item.video} title="основное видео" /></section><section className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12"><SectionTitle eyebrow="фото" title="Галерея кейса" text="Минимум для публикации — 6 сильных кадров. При необходимости можно расширить до 12."/><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{item.gallery.map((src, index) => <ImageFrame key={src} className="aspect-[4/3]" src={src}><div className="absolute left-4 top-4 rounded-full border border-[#E8E1D8]/12 bg-[#0A0A0B]/55 px-3 py-1 text-xs text-[#E8E1D8]/55">{String(index + 1).padStart(2, "0")}</div></ImageFrame>)}</div></section><section className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12"><SectionTitle eyebrow="похожие кейсы" title="Можно посмотреть дальше"/><div className="grid gap-4 md:grid-cols-3">{related.map((relatedCase) => <SurfaceCard key={relatedCase.id} button className="p-5" onClick={() => navigate(`/cases/${relatedCase.id}`)}><h3 className="text-2xl font-semibold leading-[1.18] tracking-[-0.025em]">{relatedCase.fullTitle}</h3><p className="mt-3 text-sm leading-6 text-[#E8E1D8]/60">{relatedCase.lead}</p></SurfaceCard>)}</div></section><ProjectStartBlock navigate={navigate} similar/></main>;
+  return <main><section className="mx-auto max-w-7xl px-4 py-10 md:px-6 md:py-16"><button type="button" onClick={() => navigate(routes.cases)} className="mb-8 rounded-full border border-[#E8E1D8]/12 px-4 py-2 text-sm transition hover:border-[#8F1F23]/60 hover:bg-[#340F12]/55">← Все кейсы</button><div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]"><div><Eyebrow>{item.category}</Eyebrow><h1 className="text-4xl font-semibold leading-[1.12] tracking-[-0.025em] md:text-7xl md:leading-[1.08]">{item.fullTitle}</h1><p className="mt-6 text-lg leading-8 text-[#E8E1D8]/66">{item.lead}</p><div className="mt-6 grid gap-3 sm:grid-cols-2">{item.facts.map((fact) => <div key={fact} className="rounded-2xl border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-4 text-sm leading-6 text-[#E8E1D8]/62">{fact}</div>)}</div></div><CaseCoverFrame item={item} className="aspect-[16/10]"/></div></section><section className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12"><div className="grid gap-4 lg:grid-cols-3"><SurfaceCard className="p-5"><h2 className="text-2xl font-semibold leading-[1.18]">Задача</h2><p className="mt-3 text-sm leading-7 text-[#E8E1D8]/62">{item.task}</p></SurfaceCard><SurfaceCard className="p-5"><h2 className="text-2xl font-semibold leading-[1.18]">Решение</h2><p className="mt-3 text-sm leading-7 text-[#E8E1D8]/62">{item.solution}</p></SurfaceCard><SurfaceCard className="p-5"><h2 className="text-2xl font-semibold leading-[1.18]">Результат</h2><p className="mt-3 text-sm leading-7 text-[#E8E1D8]/62">{item.result}</p></SurfaceCard></div></section><section className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12"><SectionTitle eyebrow="материалы" title="Основное видео" text="Главный ролик или showreel-фрагмент кейса."/><VideoFrame src={item.video} title="основное видео" /></section><section className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12"><SectionTitle eyebrow="фото" title="Галерея кейса" text="Минимум для публикации — 6 сильных кадров. При необходимости можно расширить до 12."/><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{item.gallery.map((src, index) => <ImageFrame key={src} className="aspect-[4/3]" src={src}><div className="absolute left-4 top-4 rounded-full border border-[#E8E1D8]/12 bg-[#0A0A0B]/55 px-3 py-1 text-xs text-[#E8E1D8]/55">{String(index + 1).padStart(2, "0")}</div></ImageFrame>)}</div></section><section className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12"><SectionTitle eyebrow="похожие кейсы" title="Можно посмотреть дальше"/><div className="grid gap-4 md:grid-cols-3">{related.map((relatedCase) => <SurfaceCard key={relatedCase.id} button className="p-5" onClick={() => navigate(`/cases/${relatedCase.id}`)}><h3 className="text-2xl font-semibold leading-[1.18] tracking-[-0.025em]">{relatedCase.fullTitle}</h3><p className="mt-3 text-sm leading-6 text-[#E8E1D8]/60">{relatedCase.lead}</p></SurfaceCard>)}</div></section><ProjectStartBlock navigate={navigate} similar/></main>;
 }
 
 function ProjectStartBlock({ navigate, similar = false }) {
