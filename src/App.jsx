@@ -211,9 +211,18 @@ function Nav({ route, navigate }) {
   </header>;
 }
 
-function VisualBox({ label = "", className = "", children }) {
+function VisualBox({ label = "", className = "", children, variant = "default", src = "", alt = "" }) {
+  const isNeutral = variant === "neutral";
+
   return <div className={cls("relative overflow-hidden rounded-[1.6rem] border border-[#E8E1D8]/10 bg-[#111]", className)}>
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(143,31,35,0.45),transparent_32%),linear-gradient(135deg,rgba(232,225,216,0.12),rgba(52,15,18,0.42)_48%,rgba(10,10,11,1))]" />
+    {src ? <img src={src} alt={alt || label || "media"} className="absolute inset-0 h-full w-full object-cover" /> : null}
+    {!src ? <div className={cls(
+      "absolute inset-0",
+      isNeutral
+        ? "bg-[radial-gradient(circle_at_28%_18%,rgba(232,225,216,0.14),transparent_34%),linear-gradient(135deg,rgba(232,225,216,0.08),rgba(28,28,30,0.86)_46%,rgba(10,10,11,1))]"
+        : "bg-[radial-gradient(circle_at_30%_20%,rgba(143,31,35,0.45),transparent_32%),linear-gradient(135deg,rgba(232,225,216,0.12),rgba(52,15,18,0.42)_48%,rgba(10,10,11,1))]"
+    )} /> : null}
+    {src ? <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,11,0.08),rgba(10,10,11,0.24))]" /> : null}
     {label ? <div className="absolute bottom-6 left-6 text-xs uppercase tracking-[0.22em] text-[#E8E1D8]/50">{label}</div> : null}
     {children}
   </div>;
@@ -326,9 +335,9 @@ function ContactPage() {
   return <main className="mx-auto max-w-7xl px-4 py-14 md:px-6 md:py-20"><div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]"><div><Eyebrow>контакты</Eyebrow><h1 className="text-4xl font-semibold tracking-[-0.055em] md:text-7xl">Запустить проект или обсудить пакет за 15–20 минут.</h1><p className="mt-6 text-lg leading-8 text-[#E8E1D8]/66">Основной контакт: Екатерина / Missing Frame production.</p><a href="mailto:partner@missingframe.ru" className="mt-8 inline-flex rounded-full border border-[#E8E1D8]/15 px-5 py-3 text-[#E8E1D8]/75">partner@missingframe.ru</a></div><form onSubmit={(e) => { e.preventDefault(); setSent(true); }} className="rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-5 md:p-8"><div className="grid gap-4"><Input label="Название проекта" required/><Textarea label="Описание задачи" required/><Input label="Email" type="email" required/><Input label="Telegram / VK / телефон"/><button className="rounded-full bg-[#8F1F23] px-5 py-3 font-semibold">Отправить заявку</button>{sent ? <div className="rounded-2xl border border-[#8F1F23]/35 bg-[#8F1F23]/12 p-4 text-sm">Спасибо. Заявка принята.</div> : null}</div></form></div></main>;
 }
 
-function SystemImageSlot({ title, text, aspect = "aspect-[16/10]" }) {
-  return <div className="overflow-hidden rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-3 transition hover:border-[#8F1F23]/45 hover:bg-[#340F12]/35">
-    <VisualBox className={aspect} />
+function SystemImageSlot({ title, text, aspect = "aspect-[16/10]", src = "" }) {
+  return <div className="overflow-hidden rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-3 transition hover:border-[#E8E1D8]/22 hover:bg-[#E8E1D8]/[0.06]">
+    <VisualBox className={aspect} variant="neutral" src={src} alt={title} />
     <div className="p-4">
       <h3 className="text-2xl font-semibold leading-tight tracking-[-0.035em]">{title}</h3>
       <p className="mt-3 text-sm leading-6 text-[#E8E1D8]/60">{text}</p>
@@ -401,12 +410,12 @@ function ProductionSystemCasePage({ item, navigate }) {
     <section className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12">
       <SectionTitle eyebrow="визуальные материалы" title="Иллюстрации процесса" text="Документы, схемы, тайминг, архив и backstage процесса" />
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <SystemImageSlot title="Паспорт проекта" text="Основной документ, демонстрирующий текущее состояние проекта" aspect="aspect-[4/3]" />
-        <SystemImageSlot title="Shot list" text="Кадры, зоны и маршрут" aspect="aspect-[4/3]" />
-        <SystemImageSlot title="Матрица компетенций" text="Структурная система для определения исполнителя для проекта" aspect="aspect-[4/3]" />
-        <SystemImageSlot title="Дорожная карта" text="Этапы и сроки выдачи" aspect="aspect-[4/3]" />
-        <SystemImageSlot title="Архив" text="Структурированная база данных материалов проекта" aspect="aspect-[4/3]" />
-        <SystemImageSlot title="Итоги" text="Разбор проекта по методологии PCA, проведение контрольного среза" aspect="aspect-[4/3]" />
+        <SystemImageSlot title="Паспорт проекта" text="Основной документ, демонстрирующий текущее состояние проекта" aspect="aspect-[4/3]" src="/assets/cases/production-system/process/project-passport.webp" />
+        <SystemImageSlot title="Shot list" text="Кадры, зоны и маршрут" aspect="aspect-[4/3]" src="/assets/cases/production-system/process/shot-list.webp" />
+        <SystemImageSlot title="Матрица компетенций" text="Структурная система для определения исполнителя для проекта" aspect="aspect-[4/3]" src="/assets/cases/production-system/process/competency-matrix.webp" />
+        <SystemImageSlot title="Дорожная карта" text="Этапы и сроки выдачи" aspect="aspect-[4/3]" src="/assets/cases/production-system/process/roadmap.webp" />
+        <SystemImageSlot title="Архив" text="Структурированная база данных материалов проекта" aspect="aspect-[4/3]" src="/assets/cases/production-system/process/archive.webp" />
+        <SystemImageSlot title="Итоги" text="Разбор проекта по методологии PCA, проведение контрольного среза" aspect="aspect-[4/3]" src="/assets/cases/production-system/process/pca-review.webp" />
       </div>
     </section>
 
