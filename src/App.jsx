@@ -338,9 +338,12 @@ function Nav({ route, navigate }) {
 
   return <header className="sticky top-0 z-40 border-b border-[#E8E1D8]/10 bg-[#0A0A0B]/80 backdrop-blur-xl">
     <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-6">
-      <button type="button" onClick={() => navigate(routes.home)} className="flex items-center gap-3 text-left">
-        <div className="relative flex h-10 w-10 items-center justify-center border border-[#E8E1D8]/20 bg-[#E8E1D8]/5"><div className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-[#8F1F23]"/><span className="font-mono text-sm tracking-[0.2em]">MF</span></div>
-        <div><div className="text-sm font-semibold uppercase tracking-[0.28em]">Missing Frame</div><div className="mt-1 text-[10px] uppercase tracking-[0.22em] text-[#E8E1D8]/50">продакшен</div></div>
+      <button type="button" onClick={() => navigate(routes.home)} className="flex items-center text-left" aria-label="Missing Frame — на главную">
+        <img
+          src="/assets/logo/missing-frame-logo.png"
+          alt="Missing Frame"
+          className="h-12 w-auto max-w-[210px] object-contain md:h-14 md:max-w-[260px]"
+        />
       </button>
       <nav className="hidden items-center gap-1 lg:flex">{links.map(([href, label]) => <button key={href} type="button" onClick={() => navigate(href)} className={cls("rounded-full px-4 py-2 text-sm transition", route === href ? "bg-[#E8E1D8] text-[#0A0A0B]" : "text-[#E8E1D8]/70 hover:bg-[#E8E1D8]/[0.08]")}>{label}</button>)}</nav>
       <button type="button" onClick={() => navigate(routes.contact)} className="hidden items-center gap-2 rounded-full bg-[#8F1F23] px-4 py-2 text-sm font-semibold transition hover:bg-[#a7282d] lg:inline-flex">Обсудить проект <ArrowRight /></button>
