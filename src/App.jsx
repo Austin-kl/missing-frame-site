@@ -659,14 +659,23 @@ function ContactPage() {
 
 
 function StaticVideoPlaceholder({ item }) {
+  const [failed, setFailed] = useState(false);
+
   return <div className="overflow-hidden rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-3">
-    <ImageFrame src={item.poster} className="aspect-video" label="video placeholder">
+    <div className="relative aspect-video overflow-hidden rounded-[1.5rem] border border-[#E8E1D8]/10 bg-[#0A0A0B]">
+      {item.poster && !failed ? <img
+        src={item.poster}
+        alt={`${item.short} video poster`}
+        onError={() => setFailed(true)}
+        className="absolute inset-0 h-full w-full object-cover opacity-90"
+      /> : <MediaFallback />}
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,11,0.05),rgba(10,10,11,0.45))]" />
       <div className="absolute left-5 top-5 rounded-full border border-[#E8E1D8]/15 bg-[#0A0A0B]/65 px-3 py-1 text-xs uppercase tracking-[0.2em] text-[#E8E1D8]/60 backdrop-blur-md">заглушка под видео</div>
       <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-[#E8E1D8]/12 bg-[#0A0A0B]/62 p-4 backdrop-blur-md">
         <h3 className="text-2xl font-semibold leading-[1.16] tracking-[-0.025em]">Видео будет добавлено позже</h3>
-        <p className="mt-2 text-sm leading-6 text-[#E8E1D8]/60">Сейчас здесь используется статичная заглушка. Замените файл <span className="font-mono text-[#E8E1D8]/80">video-poster.webp</span> в папке кейса.</p>
+        <p className="mt-2 text-sm leading-6 text-[#E8E1D8]/60">Для замены обновите файл <span className="font-mono text-[#E8E1D8]/80">/assets/cases/portal-13/video-poster.webp</span>.</p>
       </div>
-    </ImageFrame>
+    </div>
   </div>;
 }
 
