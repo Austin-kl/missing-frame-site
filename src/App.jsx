@@ -673,7 +673,6 @@ function StaticVideoPlaceholder({ item }) {
       <div className="absolute left-5 top-5 rounded-full border border-[#E8E1D8]/15 bg-[#0A0A0B]/65 px-3 py-1 text-xs uppercase tracking-[0.2em] text-[#E8E1D8]/60 backdrop-blur-md">заглушка под видео</div>
       <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-[#E8E1D8]/12 bg-[#0A0A0B]/62 p-4 backdrop-blur-md">
         <h3 className="text-2xl font-semibold leading-[1.16] tracking-[-0.025em]">Видео будет добавлено позже</h3>
-        <p className="mt-2 text-sm leading-6 text-[#E8E1D8]/60">Для замены обновите файл <span className="font-mono text-[#E8E1D8]/80">/assets/cases/portal-13/video-poster.webp</span>.</p>
       </div>
     </div>
   </div>;
