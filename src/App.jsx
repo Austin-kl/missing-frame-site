@@ -452,9 +452,9 @@ function CaseCoverFrame({ item, className = "", children }) {
 function HeroVideo() {
   const [failed, setFailed] = useState(false);
 
-  return <div className="relative aspect-[4/5] overflow-hidden rounded-[1.7rem] bg-[#111] shadow-[0_28px_90px_rgba(0,0,0,0.42)]">
+  return <div className="relative aspect-[4/5] overflow-hidden bg-transparent">
     {!failed ? <video
-      className="absolute inset-0 h-full w-full object-cover opacity-82"
+      className="absolute inset-0 h-full w-full object-cover opacity-90 mix-blend-screen"
       poster="/assets/hero/mf-backstage-poster.webp"
       autoPlay
       muted
@@ -465,8 +465,8 @@ function HeroVideo() {
     >
       <source src="/assets/hero/mf-backstage-loop.webm" type="video/webm" />
       <source src="/assets/hero/mf-backstage-loop.mp4" type="video/mp4" />
-    </video> : <ImageFrame className="absolute inset-0 h-full w-full rounded-none border-0" src="/assets/hero/mf-backstage-poster.webp" />}
-    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,11,0.05),rgba(10,10,11,0.48)),radial-gradient(circle_at_22%_16%,rgba(143,31,35,0.28),transparent_30%)]" />
+    </video> : <ImageFrame className="absolute inset-0 h-full w-full rounded-none border-0 bg-transparent" src="/assets/hero/mf-backstage-poster.webp" />}
+    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(143,31,35,0.22),transparent_35%),linear-gradient(180deg,rgba(10,10,11,0.02),rgba(10,10,11,0.18))]" />
   </div>;
 }
 
@@ -505,9 +505,9 @@ function Hero({ navigate }) {
         <p className="mt-3 max-w-3xl text-sm leading-7 text-[#E8E1D8]/62 md:text-base">Помогаем превратить событие, бренд или релиз в готовый набор материалов для коммуникации с аудиторией: фотоотчёт, короткие ролики, aftermovie, backstage и визуалы для PR, HR, партнёров и соцсетей.</p>
         <button type="button" onClick={() => navigate(routes.contact)} className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#8F1F23] px-5 py-3 font-semibold transition hover:bg-[#a7282d]">Обсудить проект <ArrowRight /></button>
       </div>
-      <div className="lg:pl-4">
+      <div className="lg:mt-10 lg:pl-4">
         <HeroVideo />
-        <div className="mt-5 rounded-2xl border border-[#E8E1D8]/12 bg-[#0A0A0B]/48 p-3 backdrop-blur-md sm:p-4">
+        <div className="mt-3 rounded-2xl border border-[#E8E1D8]/12 bg-[#0A0A0B]/48 p-3 backdrop-blur-md sm:p-4">
           <Eyebrow>ключевые факты</Eyebrow>
           <div className="grid grid-cols-3 gap-2 sm:gap-3">
             <Metric value="200+" label="событий" note="в опыте production lead" />
@@ -532,36 +532,98 @@ function CarouselControls({ prev, next, center }) {
   </div>;
 }
 
+function useSwipeMotion({ total, next, prev }) {
+  const [dragStart, setDragStart] = useState(null);
+  const [dragX, setDragX] = useState(0);
+  const [dragging, setDragging] = useState(false);
+
+  const endDrag = () => {
+    if (dragStart === null) return;
+    if (Math.abs(dragX) > 70) dragX < 0 ? next() : prev();
+    setDragStart(null);
+    setDragX(0);
+    setDragging(false);
+  };
+
+  return {
+    dragX,
+    dragging,
+    handlers: {
+      onPointerDown: (event) => {
+        if (event.pointerType === "mouse" && event.button !== 0) return;
+        setDragStart(event.clientX);
+        setDragX(0);
+        setDragging(true);
+        event.currentTarget.setPointerCapture?.(event.pointerId);
+      },
+      onPointerMove: (event) => {
+        if (dragStart === null) return;
+        const nextX = event.clientX - dragStart;
+        setDragX(Math.max(-220, Math.min(220, nextX)));
+      },
+      onPointerUp: endDrag,
+      onPointerCancel: endDrag,
+      onLostPointerCapture: endDrag,
+    },
+  };
+}
+
+function MobileCarouselTrack({ items, index, dragX, dragging, renderItem, getKey, heightClass = "h-[530px]" }) {
+  const total = items.length;
+  const offsetFor = (itemIndex) => {
+    let offset = itemIndex - index;
+    if (offset > total / 2) offset -= total;
+    if (offset < -total / 2) offset += total;
+    return offset;
+  };
+
+  return <div className={cls("relative mx-auto w-full max-w-[315px] overflow-hidden rounded-[2rem]", heightClass)}>
+    {items.map((item, itemIndex) => {
+      const offset = offsetFor(itemIndex);
+      const visible = Math.abs(offset) <= 1;
+      return <div
+        key={getKey(item)}
+        className={cls("absolute inset-0 touch-pan-y select-none", dragging ? "transition-none" : "transition-transform duration-300 ease-out")}
+        style={{
+          transform: `translateX(calc(${offset * 104}% + ${dragX}px))`,
+          opacity: visible ? 1 : 0,
+          pointerEvents: offset === 0 ? "auto" : "none",
+        }}
+      >
+        {renderItem(item, itemIndex)}
+      </div>;
+    })}
+  </div>;
+}
+
 function CasesCarousel({ navigate }) {
   const [index, setIndex] = useState(0);
-  const [touchStart, setTouchStart] = useState(null);
   const active = cases[index];
   const total = cases.length;
   const prev = () => setIndex((i) => (i - 1 + total) % total);
   const next = () => setIndex((i) => (i + 1) % total);
-  const offsetFor = (i) => { let offset = i - index; if (offset > total / 2) offset -= total; if (offset < -total / 2) offset += total; return offset; };
-  const swipeHandlers = {
-    onTouchStart: (event) => setTouchStart(event.touches[0].clientX),
-    onTouchEnd: (event) => {
-      if (touchStart === null) return;
-      const diff = touchStart - event.changedTouches[0].clientX;
-      if (Math.abs(diff) > 42) diff > 0 ? next() : prev();
-      setTouchStart(null);
-    },
-  };
+  const offsetFor = (i) => { let o = i - index; if (o > total / 2) o -= total; if (o < -total / 2) o += total; return o; };
+  const mobileSwipe = useSwipeMotion({ total, next, prev });
 
-  return <section className="mx-auto max-w-7xl select-none overflow-hidden px-4 py-10 md:px-6 md:py-14">
-    <div className="mb-7 flex flex-col gap-4 md:flex-row md:items-end md:justify-between"><div><Eyebrow>кейсы</Eyebrow><div className="mb-3 flex items-center gap-3 text-sm text-[#E8E1D8]/50"><span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1">{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span><span>{active.short}</span></div><h2 className="text-3xl font-semibold leading-[1.14] tracking-[-0.025em] md:text-5xl md:leading-[1.12]">Избранные кейсы</h2><p className="mt-3 max-w-2xl text-sm leading-6 text-[#E8E1D8]/58">Проекты в event, sport, brand и creative production: задача, масштаб, команда, формат материалов и результат.</p></div><button type="button" onClick={() => navigate(routes.cases)} className="w-fit rounded-full border border-[#E8E1D8]/15 px-4 py-2 text-sm transition hover:border-[#8F1F23]/60 hover:bg-[#340F12]/55">Все кейсы ↗</button></div>
-    <div className="md:hidden" {...swipeHandlers}>
-      <div className="mx-auto max-w-[330px] overflow-hidden rounded-[1.7rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-2.5">
-        <CaseCoverFrame key={`mobile-case-cover-${active.id}`} item={active} className="aspect-[4/5] rounded-[1.35rem]"/>
-        <div className="p-3">
-          <div className="mb-3 flex items-center justify-between gap-3"><span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1 text-xs text-[#E8E1D8]/60">{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span><span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-[#E8E1D8]/55">{active.category}</span></div>
-          <h3 className="text-2xl font-semibold leading-[1.08] tracking-[-0.025em]">{active.fullTitle}</h3>
-          <p className="mt-3 text-sm leading-6 text-[#E8E1D8]/62">{active.lead}</p>
-          <button type="button" onClick={() => navigate(`/cases/${active.id}`)} className="mt-4 inline-flex rounded-full bg-[#E8E1D8] px-4 py-2 text-sm font-semibold text-[#0A0A0B]">Открыть кейс →</button>
-        </div>
-      </div>
+  return <section className="mx-auto max-w-7xl select-none overflow-hidden px-4 py-10 md:px-6 md:py-14"><div className="mb-7 flex flex-col gap-4 md:flex-row md:items-end md:justify-between"><div><Eyebrow>кейсы</Eyebrow><div className="mb-3 flex items-center gap-3 text-sm text-[#E8E1D8]/50"><span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1">{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span><span>{active.short}</span></div><h2 className="text-3xl font-semibold leading-[1.14] tracking-[-0.025em] md:text-5xl md:leading-[1.12]">Избранные кейсы</h2><p className="mt-3 max-w-xl text-sm leading-6 text-[#E8E1D8]/58">Проекты в event, sport, brand и creative production: задача, масштаб, команда, формат материалов и результат.</p></div><button type="button" onClick={() => navigate(routes.cases)} className="w-fit rounded-full border border-[#E8E1D8]/15 px-4 py-2 text-sm transition hover:border-[#8F1F23]/60 hover:bg-[#340F12]/55">Все кейсы ↗</button></div>
+    <div className="md:hidden" {...mobileSwipe.handlers}>
+      <MobileCarouselTrack
+        items={cases}
+        index={index}
+        dragX={mobileSwipe.dragX}
+        dragging={mobileSwipe.dragging}
+        getKey={(item) => item.id}
+        heightClass="h-[535px]"
+        renderItem={(item, itemIndex) => <div className="mx-auto h-full max-w-[305px] overflow-hidden rounded-[1.8rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-3 transition duration-300 hover:border-[#8F1F23]/45 hover:bg-[#340F12]/45">
+          <CaseCoverFrame key={`mobile-case-cover-${item.id}`} item={item} className="aspect-[4/5] rounded-[1.35rem]"/>
+          <div className="p-4">
+            <div className="mb-3 flex items-center justify-between gap-3"><span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1 text-xs text-[#E8E1D8]/60">{String(itemIndex + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span><span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-[#E8E1D8]/55">{item.category}</span></div>
+            <h3 className="text-2xl font-semibold leading-[1.08] tracking-[-0.025em]">{item.fullTitle}</h3>
+            <p className="mt-3 text-sm leading-6 text-[#E8E1D8]/62">{item.lead}</p>
+            <button type="button" onClick={() => navigate(`/cases/${item.id}`)} className="mt-4 inline-flex rounded-full bg-[#E8E1D8] px-4 py-2 text-sm font-semibold text-[#0A0A0B]">Открыть кейс →</button>
+          </div>
+        </div>}
+      />
       <div className="mt-3 text-center text-xs uppercase tracking-[0.2em] text-[#E8E1D8]/34">свайп влево / вправо</div>
     </div>
     <div className="relative mx-auto hidden h-[500px] max-w-6xl md:block"><div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-44 bg-gradient-to-r from-[#0A0A0B] to-transparent"/><div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-44 bg-gradient-to-l from-[#0A0A0B] to-transparent"/>{cases.map((item, i) => { const off = offsetFor(i); const abs = Math.abs(off); const is = off === 0; return <div key={item.id} className="absolute top-0 flex h-full w-[72%] max-w-[560px] flex-col overflow-hidden rounded-[2.2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-3 shadow-2xl transition-[transform,opacity,filter,background-color,border-color] duration-300 ease-out hover:border-[#8F1F23]/45 hover:bg-[#340F12]/45" style={{ left: "50%", transform: `translate(-50%, 0) translateX(${off * 205}px) scale(${is ? 0.92 : abs === 1 ? 0.76 : 0.62})`, opacity: is ? 1 : abs === 1 ? 0.42 : abs === 2 ? 0.14 : 0, filter: is ? "blur(0px)" : abs === 1 ? "blur(5px)" : "blur(12px)", zIndex: 20 - abs, pointerEvents: "none" }}><CaseCoverFrame item={item} className="h-[54%] shrink-0"/><div className="absolute left-8 top-8 rounded-full border border-[#E8E1D8]/15 bg-[#0A0A0B]/55 px-3 py-1 text-xs">{String(i + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</div><div className="flex flex-1 flex-col justify-end p-5 pt-4"><div className="mb-3 inline-flex w-fit rounded-full border border-[#E8E1D8]/15 bg-[#0A0A0B]/55 px-3 py-1 text-xs uppercase tracking-[0.18em]">{item.category}</div><h3 className="text-4xl font-semibold leading-[1.12] tracking-[-0.025em]">{item.fullTitle}</h3><p className="mt-3 text-sm leading-6 text-[#E8E1D8]/65">{item.lead}</p></div></div>; })}</div>
@@ -588,25 +650,24 @@ function TeamCard({ member, index }) {
 
 function TeamCarousel() {
   const [index, setIndex] = useState(0);
-  const [touchStart, setTouchStart] = useState(null);
   const active = team[index];
   const total = team.length;
   const prev = () => setIndex((i) => (i - 1 + total) % total);
   const next = () => setIndex((i) => (i + 1) % total);
   const offsetFor = (i) => { let o = i - index; if (o > total / 2) o -= total; if (o < -total / 2) o += total; return o; };
-  const swipeHandlers = {
-    onTouchStart: (event) => setTouchStart(event.touches[0].clientX),
-    onTouchEnd: (event) => {
-      if (touchStart === null) return;
-      const diff = touchStart - event.changedTouches[0].clientX;
-      if (Math.abs(diff) > 42) diff > 0 ? next() : prev();
-      setTouchStart(null);
-    },
-  };
+  const mobileSwipe = useSwipeMotion({ total, next, prev });
 
   return <section className="mx-auto max-w-7xl select-none overflow-hidden px-4 py-10 md:px-6 md:py-14"><div className="mb-7"><Eyebrow>команда</Eyebrow><div className="mb-3 flex gap-3 text-sm text-[#E8E1D8]/50"><span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1">{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span><span>{active.role}</span></div><h2 className="text-3xl font-semibold leading-[1.14] tracking-[-0.025em] md:text-5xl md:leading-[1.12]">Команда Missing Frame</h2><p className="mt-3 max-w-xl text-sm leading-6 text-[#E8E1D8]/58">Команда, которая закрывает стратегию, креатив, производство и коммуникацию с клиентом.</p></div>
-    <div className="md:hidden" {...swipeHandlers}>
-      <div className="mx-auto max-w-[305px]"><TeamCard member={active} index={index}/></div>
+    <div className="md:hidden" {...mobileSwipe.handlers}>
+      <MobileCarouselTrack
+        items={team}
+        index={index}
+        dragX={mobileSwipe.dragX}
+        dragging={mobileSwipe.dragging}
+        getKey={(member) => member.id}
+        heightClass="h-[605px]"
+        renderItem={(member, memberIndex) => <div className="mx-auto h-full max-w-[305px]"><TeamCard member={member} index={memberIndex}/></div>}
+      />
       <div className="mt-3 text-center text-xs uppercase tracking-[0.2em] text-[#E8E1D8]/34">свайп влево / вправо</div>
     </div>
     <div className="relative mx-auto hidden h-[650px] max-w-6xl md:block"><div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-44 bg-gradient-to-r from-[#0A0A0B] to-transparent"/><div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-44 bg-gradient-to-l from-[#0A0A0B] to-transparent"/>{team.map((m, i) => { const off = offsetFor(i); const abs = Math.abs(off); const is = off === 0; return <div key={m.id} className="absolute top-0 h-full w-[72%] max-w-[380px] transition-[transform,opacity,filter] duration-300 ease-out" style={{ left: "50%", transform: `translate(-50%, 0) translateX(${off * 205}px) scale(${is ? 0.92 : abs === 1 ? 0.76 : 0.62})`, opacity: is ? 1 : abs === 1 ? 0.42 : abs === 2 ? 0.14 : 0, filter: is ? "blur(0px)" : abs === 1 ? "blur(5px)" : "blur(12px)", zIndex: 20 - abs, pointerEvents: is ? "auto" : "none" }}><TeamCard member={m} index={i}/></div>; })}</div>
