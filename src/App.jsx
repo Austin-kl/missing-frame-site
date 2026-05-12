@@ -659,8 +659,13 @@ function TeamCarousel() {
 
   return <section className="mx-auto max-w-7xl select-none overflow-hidden px-4 py-10 md:px-6 md:py-14"><div className="mb-7"><Eyebrow>команда</Eyebrow><div className="mb-3 flex gap-3 text-sm text-[#E8E1D8]/50"><span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1">{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span><span>{active.role}</span></div><h2 className="text-3xl font-semibold leading-[1.14] tracking-[-0.025em] md:text-5xl md:leading-[1.12]">Команда Missing Frame</h2><p className="mt-3 max-w-xl text-sm leading-6 text-[#E8E1D8]/58">Команда, которая закрывает стратегию, креатив, производство и коммуникацию с клиентом.</p></div>
     <div className="md:hidden" {...mobileSwipe.handlers}>
-      <div className="mx-auto max-w-[305px] touch-pan-y overflow-hidden rounded-[1.7rem]">
-        <TeamCard member={active} index={index}/>
+      <div className="mx-auto max-w-[305px] touch-pan-y overflow-hidden rounded-[1.7rem] px-1">
+        <div
+          className={cls("will-change-transform", mobileSwipe.dragging ? "" : "transition-transform duration-200 ease-out")}
+          style={{ transform: `translateX(${mobileSwipe.dragX}px)` }}
+        >
+          <TeamCard member={active} index={index}/>
+        </div>
       </div>
       <div className="mt-3 text-center text-xs uppercase tracking-[0.2em] text-[#E8E1D8]/34">свайп влево / вправо</div>
     </div>
