@@ -1,43 +1,28 @@
-# Missing Frame — deploy fix
+# Deploy fix
 
-## Что исправлено
-- В проекте больше не используется `framer-motion`, поэтому ошибка Rollup `failed to resolve import framer-motion` пропадает.
-- `package.json` очищен от лишних зависимостей.
-- `.npmrc` принудительно указывает публичный npm registry.
-- Для кейса `production-system` добавлена папка `public/assets/cases/production-system/process/`.
-- Красный fallback в блоках изображений производственной системы не используется.
+This version removes the broken package-lock generated from an internal registry and pins Vite/React versions compatible with Node 20.
 
-## Что удалить у себя перед установкой нового архива
-Удалить из корня проекта:
+Before replacing files locally, delete:
 
-```txt
-node_modules/
+```bash
+node_modules
 package-lock.json
 ```
 
-Удалить старый пустой файл, если он есть:
-
-```txt
-public/assets/cases/production-system/gallery/.gitkeep
-```
-
-## Что положить для изображений кейса «Производственная система»
-
-```txt
-public/assets/cases/production-system/process/project-passport.webp
-public/assets/cases/production-system/process/shot-list.webp
-public/assets/cases/production-system/process/competency-matrix.webp
-public/assets/cases/production-system/process/roadmap.webp
-public/assets/cases/production-system/process/archive.webp
-public/assets/cases/production-system/process/pca-review.webp
-```
-
-## Команды после замены архива
+Then run:
 
 ```bash
 npm install
 npm run build
 git add .
-git commit -m "Fix deploy and production system images"
+git commit -m "Fix Vercel install"
 git push origin main
 ```
+
+In Vercel, keep these settings:
+
+- Framework: Vite
+- Install Command: npm install --no-audit --no-fund --progress=false --prefer-offline
+- Build Command: npm run build
+- Output Directory: dist
+- Node.js: 20.x
