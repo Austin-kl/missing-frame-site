@@ -498,18 +498,16 @@ function Metric({ value, label, note }) {
 
 function Hero({ navigate }) {
   return <section className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
-    <div className="grid items-center gap-10 lg:grid-cols-[1.12fr_0.88fr]">
+    <div className="grid items-center gap-8 lg:grid-cols-[1fr_0.82fr]">
       <div>
-        <h1 className="max-w-4xl text-6xl font-semibold leading-[1.08] tracking-[-0.045em] md:text-8xl md:leading-[1.06] lg:text-9xl">Missing Frame</h1>
-        <p className="mt-6 max-w-3xl text-lg leading-8 text-[#E8E1D8]/74 md:text-xl">Продакшн полного цикла для событий, брендов, клипов и digital-контента.</p>
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-[#E8E1D8]/62 md:text-base">Помогаем превратить событие, бренд или релиз в готовый набор материалов для коммуникации с аудиторией: фотоотчёт, короткие ролики, aftermovie, backstage и визуалы для PR, HR, партнёров и соцсетей.</p>
+        <h1 className="text-6xl font-semibold leading-[1.08] tracking-[-0.045em] md:text-8xl md:leading-[1.06] lg:text-9xl">Missing Frame</h1>
+        <p className="mt-6 max-w-2xl text-lg leading-8 text-[#E8E1D8]/74 md:text-xl">Продакшн полного цикла для событий, брендов, клипов и digital-контента.</p>
+        <p className="mt-3 max-w-2xl text-sm leading-7 text-[#E8E1D8]/62 md:text-base">Помогаем превратить событие, бренд или релиз в готовый набор материалов для коммуникации с аудиторией: фотоотчёт, короткие ролики, aftermovie, backstage и визуалы для PR, HR, партнёров и соцсетей.</p>
         <button type="button" onClick={() => navigate(routes.contact)} className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#8F1F23] px-5 py-3 font-semibold transition hover:bg-[#a7282d]">Обсудить проект <ArrowRight /></button>
       </div>
-      <div className="lg:mt-10 lg:pl-4">
-        <div className="relative overflow-hidden rounded-[2rem] border border-[#E8E1D8]/12 bg-[#E8E1D8]/[0.045] p-3 shadow-2xl shadow-black/35">
-          <HeroVideo />
-        </div>
-        <div className="mt-3 rounded-2xl border border-[#E8E1D8]/12 bg-[#0A0A0B]/48 p-3 backdrop-blur-md sm:p-4">
+      <div className="relative overflow-hidden rounded-[2rem] border border-[#E8E1D8]/12 bg-[#E8E1D8]/5 p-3 shadow-2xl shadow-black/35">
+        <HeroVideo />
+        <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-[#E8E1D8]/12 bg-[#0A0A0B]/60 p-3 backdrop-blur-md sm:bottom-8 sm:left-8 sm:right-8 sm:p-4">
           <Eyebrow>ключевые факты</Eyebrow>
           <div className="grid grid-cols-3 gap-2 sm:gap-3">
             <Metric value="200+" label="событий" note="в опыте production lead" />
