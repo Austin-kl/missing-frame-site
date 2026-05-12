@@ -302,7 +302,7 @@ function PageShell({ children }) {
 }
 
 function Eyebrow({ children }) {
-  return <div className="mb-4 text-xs font-semibold uppercase tracking-[0.32em] text-[#8F1F23]">{children}</div>;
+  return <div className="mb-4 text-xs font-bold uppercase tracking-[0.34em] text-[#C94A4F]">{children}</div>;
 }
 
 function SectionTitle({ eyebrow, title, text, className = "" }) {
@@ -452,9 +452,9 @@ function CaseCoverFrame({ item, className = "", children }) {
 function HeroVideo() {
   const [failed, setFailed] = useState(false);
 
-  return <div className="relative aspect-[4/5] overflow-hidden rounded-[1.6rem] border border-[#E8E1D8]/10 bg-[#111]">
+  return <div className="relative aspect-[4/5] overflow-hidden rounded-[1.7rem] bg-[#111] shadow-[0_28px_90px_rgba(0,0,0,0.42)]">
     {!failed ? <video
-      className="absolute inset-0 h-full w-full object-cover opacity-80"
+      className="absolute inset-0 h-full w-full object-cover opacity-82"
       poster="/assets/hero/mf-backstage-poster.webp"
       autoPlay
       muted
@@ -466,7 +466,7 @@ function HeroVideo() {
       <source src="/assets/hero/mf-backstage-loop.webm" type="video/webm" />
       <source src="/assets/hero/mf-backstage-loop.mp4" type="video/mp4" />
     </video> : <ImageFrame className="absolute inset-0 h-full w-full rounded-none border-0" src="/assets/hero/mf-backstage-poster.webp" />}
-    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,11,0.05),rgba(10,10,11,0.66)),radial-gradient(circle_at_22%_16%,rgba(143,31,35,0.35),transparent_30%)]" />
+    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,11,0.05),rgba(10,10,11,0.48)),radial-gradient(circle_at_22%_16%,rgba(143,31,35,0.28),transparent_30%)]" />
   </div>;
 }
 
@@ -497,25 +497,27 @@ function Metric({ value, label, note }) {
 }
 
 function Hero({ navigate }) {
-  return <section className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16"><div className="grid items-center gap-8 lg:grid-cols-[1fr_0.82fr]">
-    <div>
-      <h1 className="text-6xl font-semibold leading-[1.08] tracking-[-0.045em] md:text-8xl md:leading-[1.06] lg:text-9xl">Missing Frame</h1>
-      <p className="mt-6 max-w-2xl text-lg leading-8 text-[#E8E1D8]/74 md:text-xl">Продакшн полного цикла для событий, брендов, клипов и digital-контента.</p>
-      <p className="mt-3 max-w-2xl text-sm leading-7 text-[#E8E1D8]/58 md:text-base">Создаём фото, видео, short-form и aftermovie под задачи PR, HR, партнёров, соцсетей и имиджевых кампаний.</p>
-      <button type="button" onClick={() => navigate(routes.contact)} className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#8F1F23] px-5 py-3 font-semibold transition hover:bg-[#a7282d]">Обсудить проект <ArrowRight /></button>
-    </div>
-    <div className="relative overflow-hidden rounded-[2rem] border border-[#E8E1D8]/12 bg-[#E8E1D8]/5 p-3">
-      <HeroVideo />
-      <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-[#E8E1D8]/12 bg-[#0A0A0B]/60 p-3 backdrop-blur-md sm:bottom-8 sm:left-8 sm:right-8 sm:p-4">
-        <Eyebrow>ключевые факты</Eyebrow>
-        <div className="grid grid-cols-3 gap-2 sm:gap-3">
-          <Metric value="200+" label="событий" note="в опыте production lead" />
-          <Metric value="700" label="участников" note="на одном проекте" />
-          <Metric value="6+2" label="фото + видео" note="6 фотографов + 2 видеографа" />
+  return <section className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
+    <div className="grid items-center gap-10 lg:grid-cols-[1.12fr_0.88fr]">
+      <div>
+        <h1 className="max-w-4xl text-6xl font-semibold leading-[1.08] tracking-[-0.045em] md:text-8xl md:leading-[1.06] lg:text-9xl">Missing Frame</h1>
+        <p className="mt-6 max-w-3xl text-lg leading-8 text-[#E8E1D8]/74 md:text-xl">Продакшн полного цикла для событий, брендов, клипов и digital-контента.</p>
+        <p className="mt-3 max-w-3xl text-sm leading-7 text-[#E8E1D8]/62 md:text-base">Помогаем превратить событие, бренд или релиз в готовый набор материалов для коммуникации с аудиторией: фотоотчёт, короткие ролики, aftermovie, backstage и визуалы для PR, HR, партнёров и соцсетей.</p>
+        <button type="button" onClick={() => navigate(routes.contact)} className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#8F1F23] px-5 py-3 font-semibold transition hover:bg-[#a7282d]">Обсудить проект <ArrowRight /></button>
+      </div>
+      <div className="lg:pl-4">
+        <HeroVideo />
+        <div className="mt-5 rounded-2xl border border-[#E8E1D8]/12 bg-[#0A0A0B]/48 p-3 backdrop-blur-md sm:p-4">
+          <Eyebrow>ключевые факты</Eyebrow>
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
+            <Metric value="200+" label="событий" note="в опыте production lead" />
+            <Metric value="700" label="участников" note="на одном проекте" />
+            <Metric value="6+2" label="фото + видео" note="6 фотографов + 2 видеографа" />
+          </div>
         </div>
       </div>
     </div>
-  </div></section>;
+  </section>;
 }
 
 function PartnersStrip() {
@@ -532,21 +534,38 @@ function CarouselControls({ prev, next, center }) {
 
 function CasesCarousel({ navigate }) {
   const [index, setIndex] = useState(0);
+  const [touchStart, setTouchStart] = useState(null);
   const active = cases[index];
   const total = cases.length;
   const prev = () => setIndex((i) => (i - 1 + total) % total);
   const next = () => setIndex((i) => (i + 1) % total);
-  const offsetFor = (i) => {
-    let offset = i - index;
-    if (offset > total / 2) offset -= total;
-    if (offset < -total / 2) offset += total;
-    return offset;
+  const offsetFor = (i) => { let offset = i - index; if (offset > total / 2) offset -= total; if (offset < -total / 2) offset += total; return offset; };
+  const swipeHandlers = {
+    onTouchStart: (event) => setTouchStart(event.touches[0].clientX),
+    onTouchEnd: (event) => {
+      if (touchStart === null) return;
+      const diff = touchStart - event.changedTouches[0].clientX;
+      if (Math.abs(diff) > 42) diff > 0 ? next() : prev();
+      setTouchStart(null);
+    },
   };
 
-  return <section className="mx-auto max-w-7xl select-none overflow-hidden px-4 py-10 md:px-6 md:py-14"><div className="mb-7 flex flex-col gap-4 md:flex-row md:items-end md:justify-between"><div><Eyebrow>кейсы</Eyebrow><div className="mb-3 flex items-center gap-3 text-sm text-[#E8E1D8]/50"><span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1">{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span><span>{active.short}</span></div><h2 className="text-3xl font-semibold leading-[1.14] tracking-[-0.025em] md:text-5xl md:leading-[1.12]">Избранные кейсы</h2><p className="mt-3 max-w-2xl text-sm leading-6 text-[#E8E1D8]/58">Проекты в event, sport, brand и creative production: задача, масштаб, команда, формат материалов и результат.</p></div><button type="button" onClick={() => navigate(routes.cases)} className="w-fit rounded-full border border-[#E8E1D8]/15 px-4 py-2 text-sm transition hover:border-[#8F1F23]/60 hover:bg-[#340F12]/55">Все кейсы ↗</button></div>
-    <div className="md:hidden"><div className="overflow-hidden rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-3"><CaseCoverFrame key={`mobile-case-cover-${active.id}`} item={active} className="aspect-[5/6]"/><div className="p-4"><div className="mb-3 flex items-center justify-between gap-3"><span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1 text-xs text-[#E8E1D8]/60">{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span><span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-[#E8E1D8]/55">{active.category}</span></div><h3 className="text-3xl font-semibold leading-[1.08] tracking-[-0.025em]">{active.fullTitle}</h3><p className="mt-4 text-sm leading-6 text-[#E8E1D8]/62">{active.lead}</p></div></div></div>
+  return <section className="mx-auto max-w-7xl select-none overflow-hidden px-4 py-10 md:px-6 md:py-14">
+    <div className="mb-7 flex flex-col gap-4 md:flex-row md:items-end md:justify-between"><div><Eyebrow>кейсы</Eyebrow><div className="mb-3 flex items-center gap-3 text-sm text-[#E8E1D8]/50"><span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1">{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span><span>{active.short}</span></div><h2 className="text-3xl font-semibold leading-[1.14] tracking-[-0.025em] md:text-5xl md:leading-[1.12]">Избранные кейсы</h2><p className="mt-3 max-w-2xl text-sm leading-6 text-[#E8E1D8]/58">Проекты в event, sport, brand и creative production: задача, масштаб, команда, формат материалов и результат.</p></div><button type="button" onClick={() => navigate(routes.cases)} className="w-fit rounded-full border border-[#E8E1D8]/15 px-4 py-2 text-sm transition hover:border-[#8F1F23]/60 hover:bg-[#340F12]/55">Все кейсы ↗</button></div>
+    <div className="md:hidden" {...swipeHandlers}>
+      <div className="mx-auto max-w-[330px] overflow-hidden rounded-[1.7rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-2.5">
+        <CaseCoverFrame key={`mobile-case-cover-${active.id}`} item={active} className="aspect-[4/5] rounded-[1.35rem]"/>
+        <div className="p-3">
+          <div className="mb-3 flex items-center justify-between gap-3"><span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1 text-xs text-[#E8E1D8]/60">{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span><span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-[#E8E1D8]/55">{active.category}</span></div>
+          <h3 className="text-2xl font-semibold leading-[1.08] tracking-[-0.025em]">{active.fullTitle}</h3>
+          <p className="mt-3 text-sm leading-6 text-[#E8E1D8]/62">{active.lead}</p>
+          <button type="button" onClick={() => navigate(`/cases/${active.id}`)} className="mt-4 inline-flex rounded-full bg-[#E8E1D8] px-4 py-2 text-sm font-semibold text-[#0A0A0B]">Открыть кейс →</button>
+        </div>
+      </div>
+      <div className="mt-3 text-center text-xs uppercase tracking-[0.2em] text-[#E8E1D8]/34">свайп влево / вправо</div>
+    </div>
     <div className="relative mx-auto hidden h-[500px] max-w-6xl md:block"><div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-44 bg-gradient-to-r from-[#0A0A0B] to-transparent"/><div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-44 bg-gradient-to-l from-[#0A0A0B] to-transparent"/>{cases.map((item, i) => { const off = offsetFor(i); const abs = Math.abs(off); const is = off === 0; return <div key={item.id} className="absolute top-0 flex h-full w-[72%] max-w-[560px] flex-col overflow-hidden rounded-[2.2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-3 shadow-2xl transition-[transform,opacity,filter,background-color,border-color] duration-300 ease-out hover:border-[#8F1F23]/45 hover:bg-[#340F12]/45" style={{ left: "50%", transform: `translate(-50%, 0) translateX(${off * 205}px) scale(${is ? 0.92 : abs === 1 ? 0.76 : 0.62})`, opacity: is ? 1 : abs === 1 ? 0.42 : abs === 2 ? 0.14 : 0, filter: is ? "blur(0px)" : abs === 1 ? "blur(5px)" : "blur(12px)", zIndex: 20 - abs, pointerEvents: "none" }}><CaseCoverFrame item={item} className="h-[54%] shrink-0"/><div className="absolute left-8 top-8 rounded-full border border-[#E8E1D8]/15 bg-[#0A0A0B]/55 px-3 py-1 text-xs">{String(i + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</div><div className="flex flex-1 flex-col justify-end p-5 pt-4"><div className="mb-3 inline-flex w-fit rounded-full border border-[#E8E1D8]/15 bg-[#0A0A0B]/55 px-3 py-1 text-xs uppercase tracking-[0.18em]">{item.category}</div><h3 className="text-4xl font-semibold leading-[1.12] tracking-[-0.025em]">{item.fullTitle}</h3><p className="mt-3 text-sm leading-6 text-[#E8E1D8]/65">{item.lead}</p></div></div>; })}</div>
-    <div className="mt-6 flex items-center justify-center gap-3"><button type="button" onClick={prev} className="flex h-14 w-14 items-center justify-center rounded-full border border-[#E8E1D8]/15 transition hover:border-[#8F1F23]/60 hover:bg-[#340F12]/55"><ChevronLeft className="h-5 w-5"/></button><button type="button" onClick={() => navigate(`/cases/${active.id}`)} className="rounded-full bg-[#E8E1D8] px-5 py-4 text-sm font-semibold text-[#0A0A0B]">Открыть кейс →</button><button type="button" onClick={next} className="flex h-14 w-14 items-center justify-center rounded-full border border-[#E8E1D8]/15 transition hover:border-[#8F1F23]/60 hover:bg-[#340F12]/55"><ChevronRight className="h-5 w-5"/></button></div>
+    <div className="mt-6 hidden items-center justify-center gap-3 md:flex"><button type="button" onClick={prev} className="flex h-14 w-14 items-center justify-center rounded-full border border-[#E8E1D8]/15 transition hover:border-[#8F1F23]/60 hover:bg-[#340F12]/55"><ChevronLeft className="h-5 w-5"/></button><button type="button" onClick={() => navigate(`/cases/${active.id}`)} className="rounded-full bg-[#E8E1D8] px-5 py-4 text-sm font-semibold text-[#0A0A0B]">Открыть кейс →</button><button type="button" onClick={next} className="flex h-14 w-14 items-center justify-center rounded-full border border-[#E8E1D8]/15 transition hover:border-[#8F1F23]/60 hover:bg-[#340F12]/55"><ChevronRight className="h-5 w-5"/></button></div>
   </section>;
 }
 
@@ -557,27 +576,41 @@ function TeamContactRow({ member }) {
 
 function TeamPhoto({ member, index }) {
   const [failed, setFailed] = useState(false);
-  return <div className="relative mb-5 flex aspect-[5/6] items-end justify-center overflow-hidden rounded-[1.5rem] border border-[#E8E1D8]/10 bg-[radial-gradient(circle_at_50%_20%,rgba(143,31,35,0.35),transparent_42%),linear-gradient(180deg,rgba(232,225,216,0.06),rgba(10,10,11,0.92))]">
+  return <div className="relative mb-4 flex aspect-[5/6] items-end justify-center overflow-hidden rounded-[1.35rem] border border-[#E8E1D8]/10 bg-[radial-gradient(circle_at_50%_20%,rgba(143,31,35,0.35),transparent_42%),linear-gradient(180deg,rgba(232,225,216,0.06),rgba(10,10,11,0.92))] sm:mb-5 sm:rounded-[1.5rem]">
     {member.photo && !failed ? <img src={member.photo} alt={member.name} onError={() => setFailed(true)} className="relative z-10 h-full w-full object-contain object-bottom" /> : <><div className="absolute bottom-0 h-[78%] w-[72%] rounded-t-full bg-[#E8E1D8]/10 blur-[1px]"/><div className="absolute bottom-0 h-[64%] w-[54%] rounded-t-full bg-[#E8E1D8]/20"/><div className="absolute bottom-5 text-xs uppercase tracking-[0.2em] text-[#E8E1D8]/38">фото PNG</div></>}
     <div className="absolute left-5 top-5 z-20 rounded-full border border-[#E8E1D8]/15 bg-[#0A0A0B]/50 px-3 py-1 text-xs text-[#E8E1D8]/55">0{index + 1}</div>
   </div>;
 }
 
 function TeamCard({ member, index }) {
-  return <div className="flex h-full min-w-0 select-none flex-col overflow-hidden rounded-[2rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-4 transition duration-300 hover:border-[#8F1F23]/45 hover:bg-[#340F12]/45"><TeamPhoto member={member} index={index}/><div className="mb-2 min-h-10 text-xs uppercase tracking-[0.18em] text-[#8F1F23]">{member.role}</div><h2 className="text-2xl font-semibold leading-[1.16] tracking-[-0.025em]">{member.name}</h2><p className="mt-3 text-sm leading-6 text-[#E8E1D8]/60">{member.description}</p><TeamContactRow member={member}/></div>;
+  return <div className="flex h-full min-w-0 select-none flex-col overflow-hidden rounded-[1.7rem] border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-3 transition duration-300 hover:border-[#8F1F23]/45 hover:bg-[#340F12]/45 sm:rounded-[2rem] sm:p-4"><TeamPhoto member={member} index={index}/><div className="mb-2 min-h-8 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#C94A4F] sm:min-h-10 sm:text-xs">{member.role}</div><h2 className="text-xl font-semibold leading-[1.16] tracking-[-0.025em] sm:text-2xl">{member.name}</h2><p className="mt-3 text-xs leading-5 text-[#E8E1D8]/60 sm:text-sm sm:leading-6">{member.description}</p><TeamContactRow member={member}/></div>;
 }
 
 function TeamCarousel() {
   const [index, setIndex] = useState(0);
+  const [touchStart, setTouchStart] = useState(null);
   const active = team[index];
   const total = team.length;
   const prev = () => setIndex((i) => (i - 1 + total) % total);
   const next = () => setIndex((i) => (i + 1) % total);
   const offsetFor = (i) => { let o = i - index; if (o > total / 2) o -= total; if (o < -total / 2) o += total; return o; };
+  const swipeHandlers = {
+    onTouchStart: (event) => setTouchStart(event.touches[0].clientX),
+    onTouchEnd: (event) => {
+      if (touchStart === null) return;
+      const diff = touchStart - event.changedTouches[0].clientX;
+      if (Math.abs(diff) > 42) diff > 0 ? next() : prev();
+      setTouchStart(null);
+    },
+  };
+
   return <section className="mx-auto max-w-7xl select-none overflow-hidden px-4 py-10 md:px-6 md:py-14"><div className="mb-7"><Eyebrow>команда</Eyebrow><div className="mb-3 flex gap-3 text-sm text-[#E8E1D8]/50"><span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1">{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span><span>{active.role}</span></div><h2 className="text-3xl font-semibold leading-[1.14] tracking-[-0.025em] md:text-5xl md:leading-[1.12]">Команда Missing Frame</h2><p className="mt-3 max-w-xl text-sm leading-6 text-[#E8E1D8]/58">Команда, которая закрывает стратегию, креатив, производство и коммуникацию с клиентом.</p></div>
-    <div className="md:hidden"><div className="mx-auto max-w-[340px]"><TeamCard member={active} index={index}/></div></div>
+    <div className="md:hidden" {...swipeHandlers}>
+      <div className="mx-auto max-w-[305px]"><TeamCard member={active} index={index}/></div>
+      <div className="mt-3 text-center text-xs uppercase tracking-[0.2em] text-[#E8E1D8]/34">свайп влево / вправо</div>
+    </div>
     <div className="relative mx-auto hidden h-[650px] max-w-6xl md:block"><div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-44 bg-gradient-to-r from-[#0A0A0B] to-transparent"/><div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-44 bg-gradient-to-l from-[#0A0A0B] to-transparent"/>{team.map((m, i) => { const off = offsetFor(i); const abs = Math.abs(off); const is = off === 0; return <div key={m.id} className="absolute top-0 h-full w-[72%] max-w-[380px] transition-[transform,opacity,filter] duration-300 ease-out" style={{ left: "50%", transform: `translate(-50%, 0) translateX(${off * 205}px) scale(${is ? 0.92 : abs === 1 ? 0.76 : 0.62})`, opacity: is ? 1 : abs === 1 ? 0.42 : abs === 2 ? 0.14 : 0, filter: is ? "blur(0px)" : abs === 1 ? "blur(5px)" : "blur(12px)", zIndex: 20 - abs, pointerEvents: is ? "auto" : "none" }}><TeamCard member={m} index={i}/></div>; })}</div>
-    <CarouselControls prev={prev} next={next} center={<span className="truncate">{active.name}</span>} />
+    <div className="hidden md:block"><CarouselControls prev={prev} next={next} center={<span className="truncate">{active.name}</span>} /></div>
   </section>;
 }
 
@@ -607,7 +640,7 @@ function CasesPage({ navigate }) {
 
 function ProcessPage() {
   return <main className="mx-auto max-w-7xl px-4 py-14 md:px-6 md:py-20"><SectionTitle eyebrow="система работы" title="Понятный производственный процесс" text="От брифа и production-плана до съёмки, постпродакшна и выдачи материалов. Клиент заранее понимает, кто за что отвечает, какие материалы будут подготовлены и в какие сроки."/>
-    <div className="grid gap-4 lg:grid-cols-5">{processStages.map((stage, index) => <SurfaceCard key={stage.title} className="p-6"><div className="mb-10 text-xs uppercase tracking-[0.22em] text-[#8F1F23]">0{index + 1}</div><h2 className="text-2xl font-semibold leading-[1.18] tracking-[-0.025em]">{stage.title}</h2><p className="mt-4 text-sm leading-6 text-[#E8E1D8]/62">{stage.text}</p></SurfaceCard>)}</div>
+    <div className="grid gap-4 lg:grid-cols-5">{processStages.map((stage, index) => <SurfaceCard key={stage.title} className="p-6"><div className="mb-10 text-xs uppercase tracking-[0.22em] text-[#C94A4F]">0{index + 1}</div><h2 className="text-2xl font-semibold leading-[1.18] tracking-[-0.025em]">{stage.title}</h2><p className="mt-4 text-sm leading-6 text-[#E8E1D8]/62">{stage.text}</p></SurfaceCard>)}</div>
     <section className="mt-14"><SectionTitle eyebrow="контроль" title="Что фиксируем до старта" text="Процесс нужен не для бюрократии, а для снижения риска: клиент понимает состав работ, сроки, роли и результат до съёмки."/><div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">{processBlocks.map(([title, text]) => <SurfaceCard key={title} className="p-6"><h3 className="text-2xl font-semibold leading-[1.18] tracking-[-0.025em]">{title}</h3><p className="mt-4 text-sm leading-6 text-[#E8E1D8]/62">{text}</p></SurfaceCard>)}</div></section>
     <section className="mt-14 grid gap-4 lg:grid-cols-2"><SurfaceCard className="p-6 md:p-8"><Eyebrow>форматы выдачи</Eyebrow><div className="grid gap-3 sm:grid-cols-2">{deliveryFormats.map((item) => <div key={item} className="rounded-2xl border border-[#E8E1D8]/10 bg-[#0A0A0B]/35 p-4 text-sm text-[#E8E1D8]/65">{item}</div>)}</div></SurfaceCard><SurfaceCard className="p-6 md:p-8"><Eyebrow>финальный контроль</Eyebrow><div className="grid gap-3">{finalChecklist.map((item) => <div key={item} className="flex gap-3 rounded-2xl border border-[#E8E1D8]/10 bg-[#0A0A0B]/35 p-4 text-sm text-[#E8E1D8]/65"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#8F1F23]" />{item}</div>)}</div></SurfaceCard></section>
     <section className="mt-14 grid gap-4 md:grid-cols-2"><SurfaceCard className="p-6"><h3 className="text-2xl font-semibold leading-[1.18] tracking-[-0.025em]">Что нужно от клиента</h3><p className="mt-4 text-sm leading-7 text-[#E8E1D8]/62">Краткий бриф, цель проекта, площадки публикации, дедлайн, референсы, ограничения площадки и контакт ответственного.</p></SurfaceCard><SurfaceCard className="p-6"><h3 className="text-2xl font-semibold leading-[1.18] tracking-[-0.025em]">Ориентировочные сроки</h3><p className="mt-4 text-sm leading-7 text-[#E8E1D8]/62">Бриф и сбор вводных — 1–2 дня; production-план — 2–5 дней; съёмка — по таймингу проекта; финальная выдача зависит от объёма материалов.</p></SurfaceCard></section>
@@ -711,7 +744,7 @@ function SystemCasePage({ item, navigate }) {
   const related = cases.filter((current) => current.id !== item.id).slice(0, 3);
   return <main>
     <section className="mx-auto max-w-7xl px-4 py-10 md:px-6 md:py-16"><button type="button" onClick={() => navigate(routes.cases)} className="mb-8 rounded-full border border-[#E8E1D8]/12 px-4 py-2 text-sm transition hover:border-[#8F1F23]/60 hover:bg-[#340F12]/55">← Все кейсы</button><div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]"><div><Eyebrow>{item.category}</Eyebrow><h1 className="text-4xl font-semibold leading-[1.12] tracking-[-0.025em] md:text-7xl md:leading-[1.08]">{item.fullTitle}</h1><p className="mt-6 text-lg leading-8 text-[#E8E1D8]/66">{item.lead}</p><div className="mt-6 grid gap-3 sm:grid-cols-2">{item.facts.map((fact) => <div key={fact} className="rounded-2xl border border-[#E8E1D8]/10 bg-[#E8E1D8]/[0.04] p-4 text-sm leading-6 text-[#E8E1D8]/62">{fact}</div>)}</div></div><CaseCoverFrame item={item} className="aspect-[16/10]"/></div></section>
-    <section className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12"><SectionTitle eyebrow="как устроена система" title="Что входит в нашу производственную работу" text="Этот кейс показывает не отдельное видео или галерею, а способ управления проектом: от входной задачи до финальной выдачи и разбора результата."/><div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">{systemWorkBlocks.map(([title, text], index) => <SurfaceCard key={title} className="p-5"><div className="mb-6 text-xs uppercase tracking-[0.22em] text-[#8F1F23]">0{index + 1}</div><h2 className="text-2xl font-semibold leading-[1.18] tracking-[-0.025em]">{title}</h2><p className="mt-3 text-sm leading-7 text-[#E8E1D8]/62">{text}</p></SurfaceCard>)}</div></section>
+    <section className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12"><SectionTitle eyebrow="как устроена система" title="Что входит в нашу производственную работу" text="Этот кейс показывает не отдельное видео или галерею, а способ управления проектом: от входной задачи до финальной выдачи и разбора результата."/><div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">{systemWorkBlocks.map(([title, text], index) => <SurfaceCard key={title} className="p-5"><div className="mb-6 text-xs uppercase tracking-[0.22em] text-[#C94A4F]">0{index + 1}</div><h2 className="text-2xl font-semibold leading-[1.18] tracking-[-0.025em]">{title}</h2><p className="mt-3 text-sm leading-7 text-[#E8E1D8]/62">{text}</p></SurfaceCard>)}</div></section>
     <section className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12"><div className="grid gap-4 lg:grid-cols-[0.85fr_1.15fr]"><SurfaceCard className="p-6 md:p-8"><Eyebrow>результат для клиента</Eyebrow><h2 className="text-3xl font-semibold leading-[1.14] tracking-[-0.025em] md:text-5xl md:leading-[1.12]">Проект становится управляемым</h2><p className="mt-5 text-sm leading-7 text-[#E8E1D8]/62">Клиент заранее понимает, кто за что отвечает, какие материалы будут подготовлены, в какие сроки они выйдут и как будет устроена передача файлов после проекта.</p></SurfaceCard><SurfaceCard className="p-6 md:p-8"><h3 className="text-2xl font-semibold leading-[1.18] tracking-[-0.025em]">Материалы и документы</h3><div className="mt-5 grid gap-3 sm:grid-cols-2">{systemDeliverables.map((deliverable) => <div key={deliverable} className="rounded-2xl border border-[#E8E1D8]/10 bg-[#0A0A0B]/35 p-4 text-sm text-[#E8E1D8]/64">{deliverable}</div>)}</div></SurfaceCard></div></section>
     <section className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12"><SectionTitle eyebrow="визуальные материалы" title="Иллюстрации процесса" text="Документы, схемы, тайминг, архив и backstage процесса"/><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{systemProcessImages.map(([title, text, src]) => <SystemImageSlot key={title} title={title} text={text} src={src} />)}</div></section>
     <section className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12"><SectionTitle eyebrow="похожие кейсы" title="Можно посмотреть дальше"/><div className="grid gap-4 md:grid-cols-3">{related.map((relatedCase) => <SurfaceCard key={relatedCase.id} button className="p-5" onClick={() => navigate(`/cases/${relatedCase.id}`)}><h3 className="text-2xl font-semibold leading-[1.18] tracking-[-0.025em]">{relatedCase.fullTitle}</h3><p className="mt-3 text-sm leading-6 text-[#E8E1D8]/60">{relatedCase.lead}</p></SurfaceCard>)}</div></section>
