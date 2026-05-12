@@ -659,18 +659,12 @@ function TeamCarousel() {
 
   return <section className="mx-auto max-w-7xl select-none overflow-hidden px-4 py-10 md:px-6 md:py-14"><div className="mb-7"><Eyebrow>команда</Eyebrow><div className="mb-3 flex gap-3 text-sm text-[#E8E1D8]/50"><span className="rounded-full border border-[#E8E1D8]/12 px-3 py-1">{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span><span>{active.role}</span></div><h2 className="text-3xl font-semibold leading-[1.14] tracking-[-0.025em] md:text-5xl md:leading-[1.12]">Команда Missing Frame</h2><p className="mt-3 max-w-xl text-sm leading-6 text-[#E8E1D8]/58">Команда, которая закрывает стратегию, креатив, производство и коммуникацию с клиентом.</p></div>
     <div className="md:hidden" {...mobileSwipe.handlers}>
-      <MobileCarouselTrack
-        items={team}
-        index={index}
-        dragX={mobileSwipe.dragX}
-        dragging={mobileSwipe.dragging}
-        getKey={(member) => member.id}
-        heightClass="h-[605px]"
-        renderItem={(member, memberIndex) => <div className="mx-auto h-full max-w-[305px]"><TeamCard member={member} index={memberIndex}/></div>}
-      />
+      <div className="mx-auto max-w-[305px] touch-pan-y overflow-hidden rounded-[1.7rem]">
+        <TeamCard member={active} index={index}/>
+      </div>
       <div className="mt-3 text-center text-xs uppercase tracking-[0.2em] text-[#E8E1D8]/34">свайп влево / вправо</div>
     </div>
-    <div className="relative mx-auto hidden h-[650px] max-w-6xl md:block"><div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-44 bg-gradient-to-r from-[#0A0A0B] to-transparent"/><div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-44 bg-gradient-to-l from-[#0A0A0B] to-transparent"/>{team.map((m, i) => { const off = offsetFor(i); const abs = Math.abs(off); const is = off === 0; return <div key={m.id} className="absolute top-0 h-full w-[72%] max-w-[380px] transition-[transform,opacity,filter] duration-300 ease-out" style={{ left: "50%", transform: `translate(-50%, 0) translateX(${off * 205}px) scale(${is ? 0.92 : abs === 1 ? 0.76 : 0.62})`, opacity: is ? 1 : 0, filter: is ? "blur(0px)" : "blur(12px)", zIndex: is ? 20 : 0, pointerEvents: is ? "auto" : "none" }}><TeamCard member={m} index={i}/></div>; })}</div>
+    <div className="relative mx-auto hidden h-[650px] max-w-6xl md:block"><div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-44 bg-gradient-to-r from-[#0A0A0B] to-transparent"/><div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-44 bg-gradient-to-l from-[#0A0A0B] to-transparent"/>{team.map((m, i) => { const off = offsetFor(i); const abs = Math.abs(off); const is = off === 0; return <div key={m.id} className="absolute top-0 h-full w-[72%] max-w-[380px] transition-[transform,opacity,filter] duration-300 ease-out" style={{ left: "50%", transform: `translate(-50%, 0) translateX(${off * 205}px) scale(${is ? 0.92 : abs === 1 ? 0.76 : 0.62})`, opacity: is ? 1 : abs === 1 ? 0.42 : abs === 2 ? 0.14 : 0, filter: is ? "blur(0px)" : abs === 1 ? "blur(6px) brightness(70%)" : "blur(14px) brightness(55%)", zIndex: 20 - abs, pointerEvents: is ? "auto" : "none" }}><TeamCard member={m} index={i}/></div>; })}</div>
     <div className="hidden md:block"><CarouselControls prev={prev} next={next} center={<span className="truncate">{active.name}</span>} /></div>
   </section>;
 }
