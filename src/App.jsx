@@ -568,7 +568,7 @@ function useSwipeMotion({ total, next, prev }) {
   };
 }
 
-function MobileCarouselTrack({ items, index, dragX, dragging, renderItem, getKey, heightClass = "h-[530px]", maxWidthClass = "max-w-[315px]", shiftPercent = 104 }) {
+function MobileCarouselTrack({ items, index, dragX, dragging, renderItem, getKey, heightClass = "h-[530px]" }) {
   const total = items.length;
   const offsetFor = (itemIndex) => {
     let offset = itemIndex - index;
@@ -577,7 +577,7 @@ function MobileCarouselTrack({ items, index, dragX, dragging, renderItem, getKey
     return offset;
   };
 
-  return <div className={cls("relative mx-auto w-full overflow-hidden rounded-[2rem]", maxWidthClass, heightClass)}>
+  return <div className={cls("relative mx-auto w-full max-w-[315px] overflow-hidden rounded-[2rem]", heightClass)}>
     {items.map((item, itemIndex) => {
       const offset = offsetFor(itemIndex);
       const visible = Math.abs(offset) <= 1;
@@ -585,7 +585,7 @@ function MobileCarouselTrack({ items, index, dragX, dragging, renderItem, getKey
         key={getKey(item)}
         className={cls("absolute inset-0 touch-pan-y select-none", dragging ? "transition-none" : "transition-transform duration-300 ease-out")}
         style={{
-          transform: `translateX(calc(${offset * shiftPercent}% + ${dragX}px))`,
+          transform: `translateX(calc(${offset * 104}% + ${dragX}px))`,
           opacity: visible ? 1 : 0,
           pointerEvents: offset === 0 ? "auto" : "none",
         }}
@@ -665,16 +665,12 @@ function TeamCarousel() {
         dragX={mobileSwipe.dragX}
         dragging={mobileSwipe.dragging}
         getKey={(member) => member.id}
-        heightClass="h-[650px]"
-        maxWidthClass="max-w-[340px]"
-        shiftPercent={78}
-        renderItem={(member, memberIndex) => <div className="mx-auto h-full max-w-[285px]">
-          <TeamCard member={member} index={memberIndex}/>
-        </div>}
+        heightClass="h-[605px]"
+        renderItem={(member, memberIndex) => <div className="mx-auto h-full max-w-[305px]"><TeamCard member={member} index={memberIndex}/></div>}
       />
       <div className="mt-3 text-center text-xs uppercase tracking-[0.2em] text-[#E8E1D8]/34">свайп влево / вправо</div>
     </div>
-    <div className="relative mx-auto hidden h-[650px] max-w-6xl md:block"><div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-44 bg-gradient-to-r from-[#0A0A0B] to-transparent"/><div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-44 bg-gradient-to-l from-[#0A0A0B] to-transparent"/>{team.map((m, i) => { const off = offsetFor(i); const abs = Math.abs(off); const is = off === 0; return <div key={m.id} className="absolute top-0 h-full w-[72%] max-w-[380px] transition-[transform,opacity,filter] duration-300 ease-out" style={{ left: "50%", transform: `translate(-50%, 0) translateX(${off * 205}px) scale(${is ? 0.92 : abs === 1 ? 0.76 : 0.62})`, opacity: is ? 1 : abs === 1 ? 0.42 : abs === 2 ? 0.14 : 0, filter: is ? "blur(0px)" : abs === 1 ? "blur(6px) brightness(70%)" : "blur(14px) brightness(55%)", zIndex: 20 - abs, pointerEvents: is ? "auto" : "none" }}><TeamCard member={m} index={i}/></div>; })}</div>
+    <div className="relative mx-auto hidden h-[650px] max-w-6xl md:block"><div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-44 bg-gradient-to-r from-[#0A0A0B] to-transparent"/><div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-44 bg-gradient-to-l from-[#0A0A0B] to-transparent"/>{team.map((m, i) => { const off = offsetFor(i); const abs = Math.abs(off); const is = off === 0; return <div key={m.id} className="absolute top-0 h-full w-[72%] max-w-[380px] transition-[transform,opacity,filter] duration-300 ease-out" style={{ left: "50%", transform: `translate(-50%, 0) translateX(${off * 205}px) scale(${is ? 0.92 : abs === 1 ? 0.76 : 0.62})`, opacity: is ? 1 : abs === 1 ? 0.42 : abs === 2 ? 0.14 : 0, filter: is ? "blur(0px)" : abs === 1 ? "blur(5px)" : "blur(12px)", zIndex: 20 - abs, pointerEvents: is ? "auto" : "none" }}><TeamCard member={m} index={i}/></div>; })}</div>
     <div className="hidden md:block"><CarouselControls prev={prev} next={next} center={<span className="truncate">{active.name}</span>} /></div>
   </section>;
 }
