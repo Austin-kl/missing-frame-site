@@ -586,7 +586,9 @@ function MobileCarouselTrack({ items, index, dragX, dragging, renderItem, getKey
         className={cls("absolute inset-0 touch-pan-y select-none", dragging ? "transition-none" : "transition-transform duration-300 ease-out")}
         style={{
           transform: `translateX(calc(${offset * shiftPercent}% + ${dragX}px))`,
-          opacity: visible ? 1 : 0,
+          opacity: offset === 0 ? 1 : visible ? 0.34 : 0,
+          filter: offset === 0 ? "blur(0px)" : "blur(5px) brightness(58%)",
+          zIndex: offset === 0 ? 30 : 10 - Math.abs(offset),
           pointerEvents: offset === 0 ? "auto" : "none",
         }}
       >
@@ -667,7 +669,7 @@ function TeamCarousel() {
         getKey={(member) => member.id}
         heightClass="h-[650px]"
         maxWidthClass="max-w-[340px]"
-        shiftPercent={78}
+        shiftPercent={88}
         renderItem={(member, memberIndex) => <div className="mx-auto h-full max-w-[285px]">
           <TeamCard member={member} index={memberIndex}/>
         </div>}
